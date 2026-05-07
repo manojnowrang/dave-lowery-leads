@@ -413,8 +413,8 @@ export default function Dashboard() {
                 No leads match this view.
               </div>
             ) : (
-              <div className="overflow-x-hidden">
-                <table className="w-full border-collapse text-left">
+              <div className="overflow-x-auto pb-2">
+                <table className="w-full min-w-[1220px] border-collapse text-left">
                   <thead>
                     <tr className="bg-white/[0.04] text-xs uppercase tracking-[0.16em] text-white/45">
                       <th className="px-5 py-4">Lead</th>
