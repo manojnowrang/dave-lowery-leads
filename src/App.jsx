@@ -1,4 +1,3 @@
-import { supabase } from './supabase'
 import React, { useMemo, useState } from "react";
 
 const GOLD = "#C8952D";
@@ -13,7 +12,7 @@ const leadTypes = [
     label: "Buy a Home",
     short: "Buyer",
     icon: "home",
-    description: "Get buying guidance, neighbourhood advice, and a clear next step.",
+    description: "Tell Dave what you’re looking for and get a clear buying strategy.",
     accent: GOLD,
   },
   {
@@ -21,7 +20,7 @@ const leadTypes = [
     label: "Sell My Home",
     short: "Seller",
     icon: "dollar",
-    description: "Find out what your home could sell for and how to prepare.",
+    description: "Request pricing guidance, preparation advice, and a selling plan.",
     accent: RED,
   },
   {
@@ -29,7 +28,7 @@ const leadTypes = [
     label: "Invest in Real Estate",
     short: "Investor",
     icon: "trend",
-    description: "Get help spotting Winnipeg opportunities that match your goals.",
+    description: "Find Winnipeg opportunities for cash flow, growth, or long-term wealth.",
     accent: GREEN,
   },
   {
@@ -37,7 +36,7 @@ const leadTypes = [
     label: "Get the Market Report",
     short: "Market Report",
     icon: "file",
-    description: "Get the latest Winnipeg market snapshot sent directly to you.",
+    description: "Receive Dave’s Winnipeg real estate market update and neighbourhood insights.",
     accent: BLUE,
   },
 ];
@@ -284,13 +283,13 @@ function HeroPanel() {
       </h1>
 
       <p className="mt-5 max-w-xl text-base leading-relaxed text-white/70 sm:text-lg">
-        Start with one quick request. Dave will review it personally and follow up with clear, practical next steps for buying, selling, investing, or understanding the Winnipeg market.
+        Tell Dave what you want to do next. Buy, sell, invest, or get the Winnipeg market report — your request goes straight into Dave’s private client dashboard.
       </p>
 
       <div className="mt-7 grid gap-3 sm:grid-cols-3">
-        <ProcessCard number="01" title="Choose Your Goal" text="Buy, sell, invest, or request a report." />
-        <ProcessCard number="02" title="Dave Reviews It" text="Your request goes to his private dashboard." />
-        <ProcessCard number="03" title="Clear Follow-Up" text="Dave contacts you with the next step." />
+        <ProcessCard number="01" title="Tell Dave" text="Choose your real estate goal." />
+        <ProcessCard number="02" title="Get Reviewed" text="Dave sees your request instantly." />
+        <ProcessCard number="03" title="Next Step" text="You get a call, text, or email." />
       </div>
 
       <div className="mt-7 rounded-3xl border border-white/10 bg-black/20 p-4">
@@ -322,9 +321,15 @@ function LeadTypeChooser({ onChoose }) {
   return (
     <div>
       <div className="mb-5">
-        <p className="text-xs font-black uppercase tracking-[0.2em]" style={{ color: GOLD }}>Start here</p>
-        <h2 className="mt-2 text-3xl font-black tracking-tight">What are you thinking about?</h2>
-        <p className="mt-2 text-sm leading-relaxed text-slate-600 sm:text-base">Pick the closest option. You do not need to know all the details yet.</p>
+        <p className="text-xs font-black uppercase tracking-[0.2em]" style={{ color: GOLD }}>
+          Start here
+        </p>
+        <h2 className="mt-2 text-3xl font-black tracking-tight">
+          How can Dave help?
+        </h2>
+        <p className="mt-2 text-sm leading-relaxed text-slate-600 sm:text-base">
+          Choose one path. The form will customize itself.
+        </p>
       </div>
 
       <div className="grid gap-3 sm:grid-cols-2">
@@ -335,16 +340,38 @@ function LeadTypeChooser({ onChoose }) {
             onClick={() => onChoose(item.id)}
             className="group min-h-[150px] rounded-3xl border border-slate-200 bg-slate-50 p-4 text-left transition hover:-translate-y-1 hover:border-amber-400 hover:bg-white hover:shadow-xl sm:p-5"
           >
-            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl text-white" style={{ backgroundColor: item.accent }}>
+            <div
+              className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl text-white"
+              style={{ backgroundColor: item.accent }}
+            >
               <Icon name={item.icon} />
             </div>
             <h3 className="text-xl font-black">{item.label}</h3>
-            <p className="mt-2 text-sm leading-relaxed text-slate-600">{item.description}</p>
-            <div className="mt-4 inline-flex items-center gap-2 text-sm font-black" style={{ color: item.accent }}>
-              Continue <Icon name="right" size={16} className="transition group-hover:translate-x-1" />
+            <p className="mt-2 text-sm leading-relaxed text-slate-600">
+              {item.description}
+            </p>
+            <div
+              className="mt-4 inline-flex items-center gap-2 text-sm font-black"
+              style={{ color: item.accent }}
+            >
+              Continue{" "}
+              <Icon
+                name="right"
+                size={16}
+                className="transition group-hover:translate-x-1"
+              />
             </div>
           </button>
         ))}
+      </div>
+
+      {/* ✅ LOGO AT BOTTOM */}
+      <div className="mt-10 pt-6 border-t border-slate-200 text-center">
+        <img
+          src="/royal-lepage-logo.png"
+          alt="Royal LePage"
+          className="mx-auto object-contain"
+        />
       </div>
     </div>
   );
@@ -353,19 +380,14 @@ function LeadTypeChooser({ onChoose }) {
 function LeadForm({ selected, leadType, form, updateField, onBack, onSubmit, submitting, submitError }) {
   return (
     <form onSubmit={onSubmit}>
-      <div className="mb-4">
-        <a href="/" className="inline-flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-slate-800">
-          <Icon name="left" size={16} /> Home
-        </a>
-      </div>
       <button type="button" onClick={onBack} className="mb-5 inline-flex items-center gap-2 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-xs font-black uppercase tracking-wide text-slate-600 transition hover:bg-slate-100">
         <Icon name="left" size={16} /> Back to Options
       </button>
 
       <div className="mb-5 rounded-3xl border border-slate-200 bg-slate-50 p-4">
         <p className="text-xs font-black uppercase tracking-[0.2em]" style={{ color: selected.accent }}>{selected.short} Request</p>
-        <h2 className="mt-2 text-3xl font-black tracking-tight">Almost done.</h2>
-        <p className="mt-2 text-sm text-slate-600">Share the basics. Dave can help you sort out the rest.</p>
+        <h2 className="mt-2 text-3xl font-black tracking-tight">Tell Dave a little more.</h2>
+        <p className="mt-2 text-sm text-slate-600">This takes less than one minute.</p>
       </div>
 
       <div className="grid gap-3 sm:grid-cols-2">
@@ -387,24 +409,22 @@ function LeadForm({ selected, leadType, form, updateField, onBack, onSubmit, sub
           onChange={(event) => updateField("message", event.target.value)}
           rows={4}
           className="w-full min-h-[110px] rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-base outline-none transition focus:border-amber-500 focus:bg-white"
-          placeholder="Example: I’m thinking about selling this spring, buying in North Kildonan, or just want to understand prices..."
+          placeholder="Tell Dave anything helpful about your goals..."
         />
       </div>
 
       <label className="mt-4 flex items-start gap-3 rounded-2xl bg-slate-50 p-4 text-sm text-slate-600">
         <input type="checkbox" checked={form.consent} onChange={(event) => updateField("consent", event.target.checked)} required className="mt-1 h-5 w-5 shrink-0" />
-        <span>I agree that Dave Lowery may contact me about this real estate request. No spam — just follow-up about this inquiry.</span>
+        <span>I consent to Dave Lowery contacting me about my real estate inquiry.</span>
       </label>
 
       {submitError ? <p className="mt-4 rounded-xl bg-red-50 p-3 text-sm font-bold text-red-700">{submitError}</p> : null}
 
       <button type="submit" disabled={submitting} className="mt-5 flex min-h-[54px] w-full items-center justify-center gap-2 rounded-2xl px-5 py-4 text-base font-black uppercase tracking-wide text-white shadow-xl transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60" style={{ backgroundColor: NAVY }}>
-        {submitting ? "Sending..." : "Get My Next Step"} <Icon name="right" size={18} />
+        {submitting ? "Sending..." : "Send My Request"} <Icon name="right" size={18} />
       </button>
 
-      <div className="mt-4 rounded-2xl bg-slate-50 p-4 text-center">
-        <p className="text-xs font-black uppercase tracking-wide text-slate-500">Fast follow-up • Local advice • No pressure</p>
-      </div>
+      <p className="mt-4 text-center text-xs font-bold uppercase tracking-wide text-slate-400">Dave will follow up directly.</p>
     </form>
   );
 }
@@ -461,16 +481,12 @@ function SuccessScreen({ resetFlow }) {
       </div>
       <p className="text-xs font-black uppercase tracking-[0.24em]" style={{ color: GOLD }}>Request received</p>
       <h1 className="mt-3 text-4xl font-black tracking-tight sm:text-5xl">You’re in. Dave will be in touch shortly.</h1>
-      <p className="mt-2 text-lg font-bold text-amber-200">
-        Dave typically responds within 24 hours
-      </p>
       <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed text-white/65">Your information has been sent directly into Dave’s private lead dashboard. He can review your goals and follow up with the right next step.</p>
 
-      <div className="mt-8 grid gap-3 sm:grid-cols-4">
+      <div className="mt-8 grid gap-3 sm:grid-cols-3">
         <a href="tel:2047973000" className="rounded-2xl border border-emerald-400/30 bg-emerald-400/10 px-4 py-4 font-black uppercase tracking-wide text-emerald-100">Call Dave</a>
         <a href="mailto:info@davelowery.com" className="rounded-2xl border border-blue-400/30 bg-blue-400/10 px-4 py-4 font-black uppercase tracking-wide text-blue-100">Email Dave</a>
         <button type="button" onClick={resetFlow} className="rounded-2xl border border-white/10 bg-white/10 px-4 py-4 font-black uppercase tracking-wide text-white hover:bg-white/15">Start Over</button>
-        <a href="/" className="rounded-2xl border border-white/10 bg-white/10 px-4 py-4 font-black uppercase tracking-wide text-white hover:bg-white/15">Back to Home</a>
       </div>
 
       <div className="mt-8 rounded-3xl border border-white/10 bg-black/20 p-5 text-left">
