@@ -674,7 +674,11 @@ function LeadDrawer({ lead, close, updateLead }) {
         </button>
 
         <div className="mt-8 grid gap-4">
-          <Detail label="Phone" value={lead.phone} />
+          <EditField
+  label="Phone"
+  value={editing.phone}
+  onChange={(value) => updateField("phone", value)}
+/>
           <Detail label="Email" value={lead.email} />
           <Detail label="Preferred Area" value={lead.preferred_area} />
           <Detail label="Timeline" value={lead.timeline} />

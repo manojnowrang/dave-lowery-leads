@@ -10,34 +10,34 @@ const BLUE = "#2563EB";
 const leadTypes = [
   {
     id: "buy",
-    label: "I Want to Buy",
-    short: "Buy",
+    label: "Buy a Home",
+    short: "Buyer",
     icon: "home",
-    description: "Find the right home, not just any home.",
+    description: "Get buying guidance, neighbourhood advice, and a clear next step.",
     accent: GOLD,
   },
   {
     id: "sell",
-    label: "I Want to Sell",
-    short: "Sell",
+    label: "Sell My Home",
+    short: "Seller",
     icon: "dollar",
-    description: "Get a smart pricing and marketing strategy.",
+    description: "Find out what your home could sell for and how to prepare.",
     accent: RED,
   },
   {
     id: "invest",
-    label: "I Want to Invest",
-    short: "Invest",
+    label: "Invest in Real Estate",
+    short: "Investor",
     icon: "trend",
-    description: "Build wealth with Winnipeg real estate.",
+    description: "Get help spotting Winnipeg opportunities that match your goals.",
     accent: GREEN,
   },
   {
     id: "market_report",
-    label: "Send Me the Market Report",
+    label: "Get the Market Report",
     short: "Market Report",
     icon: "file",
-    description: "Get the latest Winnipeg market snapshot.",
+    description: "Get the latest Winnipeg market snapshot sent directly to you.",
     accent: BLUE,
   },
 ];
@@ -62,13 +62,11 @@ const initialForm = {
   consent: false,
 };
 
-function isValidLeadType(value) {
-  return leadTypes.some((item) => item.id === value);
-}
-
-function getRequiredFieldsForLeadType(value) {
-  if (!isValidLeadType(value)) return [];
-  return ["firstName", "lastName", "email", "phone", "consent"];
+function getSupabaseClient() {
+  if (typeof globalThis === "undefined") return null;
+  if (globalThis.supabaseClient) return globalThis.supabaseClient;
+  if (globalThis.supabase) return globalThis.supabase;
+  return null;
 }
 
 function buildLeadPayload(leadType, form) {
@@ -91,20 +89,20 @@ function buildLeadPayload(leadType, form) {
     investment_goal: form.investmentGoal,
     message: form.message,
     consent: form.consent,
+    status: "new",
+    priority: "warm",
   };
 }
 
 function runSelfTests() {
-  console.assert(isValidLeadType("buy") === true, "buy should be valid");
-  console.assert(isValidLeadType("sell") === true, "sell should be valid");
-  console.assert(isValidLeadType("invest") === true, "invest should be valid");
-  console.assert(isValidLeadType("market_report") === true, "market_report should be valid");
-  console.assert(isValidLeadType("unknown") === false, "unknown should not be valid");
-  console.assert(getRequiredFieldsForLeadType("buy").includes("email"), "email should be required");
-  const testPayload = buildLeadPayload("buy", { ...initialForm, firstName: "Test", consent: true });
-  console.assert(testPayload.lead_type === "buy", "payload should include lead type");
-  console.assert(testPayload.first_name === "Test", "payload should map first name");
-  console.assert(testPayload.consent === true, "payload should map consent");
+  const payload = buildLeadPayload("buy", { ...initialForm, firstName: "Test", consent: true });
+  console.assert(payload.lead_type === "buy", "payload should keep lead type");
+  console.assert(payload.first_name === "Test", "payload should map first name");
+  console.assert(payload.status === "new", "payload should default status to new");
+  console.assert(payload.priority === "warm", "payload should default priority to warm");
+  console.assert(leadTypes.length === 4, "front end should include four lead paths");
+  const client = getSupabaseClient();
+  console.assert(client === null || typeof client.from === "function", "Supabase client should be null or a valid client");
 }
 
 runSelfTests();
@@ -124,97 +122,35 @@ function Icon({ name, size = 24, className = "" }) {
   };
 
   if (name === "home") {
-    return (
-      <svg {...props}>
-        <path d="M3 10.5 12 3l9 7.5" />
-        <path d="M5 9.5V21h14V9.5" />
-        <path d="M9 21v-7h6v7" />
-      </svg>
-    );
+    return <svg {...props}><path d="M3 10.5 12 3l9 7.5" /><path d="M5 9.5V21h14V9.5" /><path d="M9 21v-7h6v7" /></svg>;
   }
-
   if (name === "dollar") {
-    return (
-      <svg {...props}>
-        <path d="M12 2v20" />
-        <path d="M17 5.5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-      </svg>
-    );
+    return <svg {...props}><path d="M12 2v20" /><path d="M17 5.5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" /></svg>;
   }
-
   if (name === "trend") {
-    return (
-      <svg {...props}>
-        <path d="M3 17l6-6 4 4 8-8" />
-        <path d="M15 7h6v6" />
-      </svg>
-    );
+    return <svg {...props}><path d="M3 17l6-6 4 4 8-8" /><path d="M15 7h6v6" /></svg>;
   }
-
   if (name === "file") {
-    return (
-      <svg {...props}>
-        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-        <path d="M14 2v6h6" />
-        <path d="M8 13h8" />
-        <path d="M8 17h6" />
-      </svg>
-    );
+    return <svg {...props}><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><path d="M14 2v6h6" /><path d="M8 13h8" /><path d="M8 17h6" /></svg>;
   }
-
   if (name === "phone") {
-    return (
-      <svg {...props}>
-        <path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.8 19.8 0 0 1 3.11 5.18 2 2 0 0 1 5.11 3h3a2 2 0 0 1 2 1.72c.12.9.33 1.77.63 2.61a2 2 0 0 1-.45 2.11L9 10.73a16 16 0 0 0 4.27 4.27l1.29-1.29a2 2 0 0 1 2.11-.45c.84.3 1.71.51 2.61.63A2 2 0 0 1 22 16.92z" />
-      </svg>
-    );
+    return <svg {...props}><path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.8 19.8 0 0 1 3.11 5.18 2 2 0 0 1 5.11 3h3a2 2 0 0 1 2 1.72c.12.9.33 1.77.63 2.61a2 2 0 0 1-.45 2.11L9 10.73a16 16 0 0 0 4.27 4.27l1.29-1.29a2 2 0 0 1 2.11-.45c.84.3 1.71.51 2.61.63A2 2 0 0 1 22 16.92z" /></svg>;
   }
-
   if (name === "mail") {
-    return (
-      <svg {...props}>
-        <rect x="3" y="5" width="18" height="14" rx="2" />
-        <path d="M3 7l9 6 9-6" />
-      </svg>
-    );
+    return <svg {...props}><rect x="3" y="5" width="18" height="14" rx="2" /><path d="M3 7l9 6 9-6" /></svg>;
   }
-
   if (name === "map") {
-    return (
-      <svg {...props}>
-        <path d="M12 21s7-4.35 7-11a7 7 0 1 0-14 0c0 6.65 7 11 7 11z" />
-        <circle cx="12" cy="10" r="2.5" />
-      </svg>
-    );
+    return <svg {...props}><path d="M12 21s7-4.35 7-11a7 7 0 1 0-14 0c0 6.65 7 11 7 11z" /><circle cx="12" cy="10" r="2.5" /></svg>;
   }
-
   if (name === "check") {
-    return (
-      <svg {...props}>
-        <circle cx="12" cy="12" r="10" />
-        <path d="M8 12l3 3 5-6" />
-      </svg>
-    );
+    return <svg {...props}><circle cx="12" cy="12" r="10" /><path d="M8 12l3 3 5-6" /></svg>;
   }
-
   if (name === "right") {
-    return (
-      <svg {...props}>
-        <path d="M5 12h14" />
-        <path d="M12 5l7 7-7 7" />
-      </svg>
-    );
+    return <svg {...props}><path d="M5 12h14" /><path d="M12 5l7 7-7 7" /></svg>;
   }
-
   if (name === "left") {
-    return (
-      <svg {...props}>
-        <path d="M19 12H5" />
-        <path d="M12 19l-7-7 7-7" />
-      </svg>
-    );
+    return <svg {...props}><path d="M19 12H5" /><path d="M12 19l-7-7 7-7" /></svg>;
   }
-
   return null;
 }
 
@@ -225,18 +161,33 @@ export default function DaveLoweryLeadCaptureApp() {
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
 
-  const selected = useMemo(() => {
-    return leadTypes.find((item) => item.id === leadType) || null;
-  }, [leadType]);
+  const selected = useMemo(() => leadTypes.find((item) => item.id === leadType) || null, [leadType]);
 
   function updateField(field, value) {
     setForm((prev) => ({ ...prev, [field]: value }));
   }
 
+  function resetFlow() {
+    setLeadType(null);
+    setForm(initialForm);
+    setSubmitted(false);
+    setSubmitError("");
+    setSubmitting(false);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
   async function handleSubmit(event) {
     event.preventDefault();
-    setSubmitError("");
     setSubmitting(true);
+    setSubmitError("");
+
+    const supabase = getSupabaseClient();
+
+    if (!supabase) {
+      setSubmitting(false);
+      setSubmitError("Supabase is not connected. In production, make sure globalThis.supabaseClient is set in main.jsx.");
+      return;
+    }
 
     const payload = buildLeadPayload(leadType, form);
     const { error } = await supabase.from("leads").insert([payload]);
@@ -245,92 +196,135 @@ export default function DaveLoweryLeadCaptureApp() {
 
     if (error) {
       console.error("Supabase insert error:", error);
-      setSubmitError("Something went wrong. Please try again or contact Dave directly.");
+      setSubmitError("Something went wrong. Please try again or call Dave directly.");
       return;
     }
 
     setSubmitted(true);
-  }
-
-  function resetApp() {
-    setLeadType(null);
-    setForm(initialForm);
-    setSubmitted(false);
-    setSubmitError("");
-    setSubmitting(false);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   return (
     <div className="min-h-screen overflow-hidden bg-slate-950 text-white">
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
-        <div className="absolute -right-24 -top-24 h-72 w-72 rounded-full bg-amber-500/20 blur-3xl sm:h-96 sm:w-96" />
-        <div className="absolute -left-24 top-1/3 h-72 w-72 rounded-full bg-blue-800/30 blur-3xl sm:h-80 sm:w-80" />
+        <div className="absolute -right-24 -top-24 h-80 w-80 rounded-full bg-amber-500/20 blur-3xl sm:h-96 sm:w-96" />
+        <div className="absolute -left-24 top-1/3 h-80 w-80 rounded-full bg-blue-800/25 blur-3xl" />
+        <div className="absolute bottom-[-120px] right-1/4 h-80 w-80 rounded-full bg-red-900/20 blur-3xl" />
       </div>
 
-      <main className="relative mx-auto flex min-h-screen max-w-7xl items-center px-3 py-4 sm:px-4 sm:py-6 lg:px-8 lg:py-8">
-        <div className="grid w-full gap-4 lg:grid-cols-[0.92fr_1.08fr] lg:gap-6">
-          <BrandPanel />
+      <Header />
 
-          <section className="rounded-[1.5rem] bg-white p-4 text-slate-950 shadow-2xl sm:rounded-[1.75rem] sm:p-5 md:p-7">
-            {!leadType && !submitted && <LeadTypeChooser onChoose={setLeadType} />}
-            {leadType && !submitted && selected && (
-              <LeadForm
-                selected={selected}
-                leadType={leadType}
-                form={form}
-                updateField={updateField}
-                onBack={() => setLeadType(null)}
-                onSubmit={handleSubmit}
-                submitting={submitting}
-                submitError={submitError}
-              />
-            )}
-            {submitted && <ThankYou resetApp={resetApp} />}
-          </section>
-        </div>
+      <main className="relative mx-auto max-w-7xl px-3 pb-8 pt-4 sm:px-5 lg:px-8">
+        {submitted ? (
+          <SuccessScreen resetFlow={resetFlow} />
+        ) : (
+          <div className="grid gap-5 lg:grid-cols-[0.92fr_1.08fr] lg:gap-6">
+            <HeroPanel />
+            <section className="rounded-[1.75rem] bg-white p-4 text-slate-950 shadow-2xl sm:p-6 md:p-7">
+              {!leadType ? (
+                <LeadTypeChooser onChoose={setLeadType} />
+              ) : (
+                <LeadForm
+                  selected={selected}
+                  leadType={leadType}
+                  form={form}
+                  updateField={updateField}
+                  onBack={() => setLeadType(null)}
+                  onSubmit={handleSubmit}
+                  submitting={submitting}
+                  submitError={submitError}
+                />
+              )}
+            </section>
+          </div>
+        )}
       </main>
     </div>
   );
 }
 
-function BrandPanel() {
+function Header() {
   return (
-    <section className="rounded-[1.5rem] border border-white/10 bg-white/[0.06] p-4 shadow-2xl backdrop-blur sm:rounded-[1.75rem] sm:p-6 md:p-8">
-      <div className="mb-6 flex flex-col gap-3 sm:mb-8 sm:flex-row sm:items-center sm:justify-between">
+    <header className="relative z-10 mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
+      <a href="/" className="group inline-flex items-center gap-3">
+        <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-white/10 text-sm font-black" style={{ color: GOLD }}>
+          DL
+        </div>
         <div>
-          <p className="text-2xl font-black tracking-tight sm:text-3xl">
-            DAVE <span style={{ color: GOLD }}>LOWERY</span>
-          </p>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-white/70 sm:text-sm">REALTOR® | WINNIPEG, MB</p>
+          <p className="text-lg font-black leading-none tracking-tight">DAVE LOWERY</p>
+          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/50">Winnipeg Realtor®</p>
         </div>
-        <div className="w-fit rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-left text-[11px] font-bold uppercase leading-tight sm:text-right sm:text-xs">
-          Royal LePage<br />Prime Real Estate
-        </div>
+      </a>
+
+      <div className="flex items-center gap-2">
+        <a href="tel:2047973000" className="hidden rounded-2xl border border-white/10 bg-white/10 px-4 py-3 text-xs font-black uppercase tracking-wide text-white transition hover:bg-white/15 sm:inline-flex">
+          Call Dave
+        </a>
+        <a href="/login" className="rounded-2xl border border-amber-400/25 bg-amber-400/10 px-4 py-3 text-xs font-black uppercase tracking-wide text-amber-100 transition hover:bg-amber-400/20">
+          Admin
+        </a>
+      </div>
+    </header>
+  );
+}
+
+function HeroPanel() {
+  return (
+    <section className="rounded-[1.75rem] border border-white/10 bg-white/[0.06] p-5 shadow-2xl backdrop-blur sm:p-7 md:p-8">
+      <div className="mb-5 inline-flex rounded-full border border-amber-400/25 bg-amber-400/10 px-4 py-2 text-xs font-black uppercase tracking-[0.2em] text-amber-100">
+        Winnipeg Real Estate Help
       </div>
 
-      <div>
-        <p className="mb-2 font-serif text-2xl italic text-white/90 sm:text-3xl">What a Difference a</p>
-        <h1 className="text-5xl font-black leading-[0.88] tracking-tight sm:text-6xl lg:text-7xl">
-          DAVE
-          <span className="block font-serif text-4xl italic leading-none sm:text-5xl" style={{ color: GOLD }}>
-            Makes!
-          </span>
-        </h1>
-        <p className="mt-4 max-w-md text-base leading-relaxed text-white/78 sm:mt-6 sm:text-lg">
-          Trusted advice. Proven results. A better real estate experience for buyers, sellers, and investors across Winnipeg.
-        </p>
+      <p className="font-serif text-2xl italic text-white/90 sm:text-3xl">What a Difference a</p>
+      <h1 className="mt-1 text-6xl font-black leading-[0.88] tracking-tight sm:text-7xl lg:text-8xl">
+        DAVE
+        <span className="block font-serif text-5xl italic leading-none sm:text-6xl" style={{ color: GOLD }}>
+          Makes!
+        </span>
+      </h1>
+
+      <p className="mt-5 max-w-xl text-base leading-relaxed text-white/70 sm:text-lg">
+        Start with one quick request. Dave will review it personally and follow up with clear, practical next steps for buying, selling, investing, or understanding the Winnipeg market.
+      </p>
+
+      <div className="mt-7 grid gap-3 sm:grid-cols-3">
+        <ProcessCard number="01" title="Choose Your Goal" text="Buy, sell, invest, or request a report." />
+        <ProcessCard number="02" title="Dave Reviews It" text="Your request goes to his private dashboard." />
+        <ProcessCard number="03" title="Clear Follow-Up" text="Dave contacts you with the next step." />
+      </div>
+
+      <div className="mt-7 rounded-3xl border border-white/10 bg-black/20 p-4">
+        <p className="text-sm font-bold text-white/80">Prefer to talk right now?</p>
+        <div className="mt-3 grid gap-3 sm:grid-cols-2">
+          <a href="tel:2047973000" className="rounded-2xl border border-emerald-400/30 bg-emerald-400/10 px-4 py-3 text-center text-sm font-black uppercase tracking-wide text-emerald-100">
+            Call 204.797.3000
+          </a>
+          <a href="mailto:info@davelowery.com" className="rounded-2xl border border-blue-400/30 bg-blue-400/10 px-4 py-3 text-center text-sm font-black uppercase tracking-wide text-blue-100">
+            Email Dave
+          </a>
+        </div>
       </div>
     </section>
+  );
+}
+
+function ProcessCard({ number, title, text }) {
+  return (
+    <div className="rounded-3xl border border-white/10 bg-white/[0.05] p-4">
+      <p className="text-xs font-black uppercase tracking-[0.2em]" style={{ color: GOLD }}>{number}</p>
+      <p className="mt-2 font-black">{title}</p>
+      <p className="mt-1 text-sm leading-relaxed text-white/50">{text}</p>
+    </div>
   );
 }
 
 function LeadTypeChooser({ onChoose }) {
   return (
     <div>
-      <div className="mb-5 sm:mb-6">
-        <p className="text-xs font-bold uppercase tracking-[0.2em] sm:text-sm" style={{ color: GOLD }}>Start here</p>
-        <h2 className="mt-2 text-2xl font-black tracking-tight sm:text-3xl">How can Dave help?</h2>
-        <p className="mt-2 text-sm text-slate-600 sm:text-base">Choose the option that best matches your real estate goal.</p>
+      <div className="mb-5">
+        <p className="text-xs font-black uppercase tracking-[0.2em]" style={{ color: GOLD }}>Start here</p>
+        <h2 className="mt-2 text-3xl font-black tracking-tight">What are you thinking about?</h2>
+        <p className="mt-2 text-sm leading-relaxed text-slate-600 sm:text-base">Pick the closest option. You do not need to know all the details yet.</p>
       </div>
 
       <div className="grid gap-3 sm:grid-cols-2">
@@ -339,14 +333,14 @@ function LeadTypeChooser({ onChoose }) {
             key={item.id}
             type="button"
             onClick={() => onChoose(item.id)}
-            className="group min-h-[142px] rounded-3xl border border-slate-200 bg-slate-50 p-4 text-left transition hover:-translate-y-1 hover:border-amber-400 hover:bg-white hover:shadow-xl sm:p-5"
+            className="group min-h-[150px] rounded-3xl border border-slate-200 bg-slate-50 p-4 text-left transition hover:-translate-y-1 hover:border-amber-400 hover:bg-white hover:shadow-xl sm:p-5"
           >
-            <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-2xl text-white sm:mb-4" style={{ backgroundColor: item.accent }}>
-              <Icon name={item.icon} size={24} />
+            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl text-white" style={{ backgroundColor: item.accent }}>
+              <Icon name={item.icon} />
             </div>
-            <h3 className="text-lg font-black sm:text-xl">{item.label}</h3>
+            <h3 className="text-xl font-black">{item.label}</h3>
             <p className="mt-2 text-sm leading-relaxed text-slate-600">{item.description}</p>
-            <div className="mt-4 flex items-center gap-2 text-sm font-bold" style={{ color: item.accent }}>
+            <div className="mt-4 inline-flex items-center gap-2 text-sm font-black" style={{ color: item.accent }}>
               Continue <Icon name="right" size={16} className="transition group-hover:translate-x-1" />
             </div>
           </button>
@@ -359,12 +353,19 @@ function LeadTypeChooser({ onChoose }) {
 function LeadForm({ selected, leadType, form, updateField, onBack, onSubmit, submitting, submitError }) {
   return (
     <form onSubmit={onSubmit}>
-      <div className="mb-5">
-        <button type="button" onClick={onBack} className="mb-4 inline-flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-slate-900">
-          <Icon name="left" size={16} /> Back
-        </button>
-        <p className="text-xs font-bold uppercase tracking-[0.2em] sm:text-sm" style={{ color: selected.accent }}>{selected.short} Lead</p>
-        <h2 className="mt-2 text-2xl font-black tracking-tight sm:text-3xl">Tell Dave a little more.</h2>
+      <div className="mb-4">
+        <a href="/" className="inline-flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-slate-800">
+          <Icon name="left" size={16} /> Home
+        </a>
+      </div>
+      <button type="button" onClick={onBack} className="mb-5 inline-flex items-center gap-2 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-xs font-black uppercase tracking-wide text-slate-600 transition hover:bg-slate-100">
+        <Icon name="left" size={16} /> Back to Options
+      </button>
+
+      <div className="mb-5 rounded-3xl border border-slate-200 bg-slate-50 p-4">
+        <p className="text-xs font-black uppercase tracking-[0.2em]" style={{ color: selected.accent }}>{selected.short} Request</p>
+        <h2 className="mt-2 text-3xl font-black tracking-tight">Almost done.</h2>
+        <p className="mt-2 text-sm text-slate-600">Share the basics. Dave can help you sort out the rest.</p>
       </div>
 
       <div className="grid gap-3 sm:grid-cols-2">
@@ -380,37 +381,30 @@ function LeadForm({ selected, leadType, form, updateField, onBack, onSubmit, sub
       {leadType === "market_report" && <MarketReportFields form={form} updateField={updateField} />}
 
       <div className="mt-4">
-        <label className="mb-2 block text-sm font-bold text-slate-700">Message / Notes</label>
+        <label className="mb-2 block text-sm font-black text-slate-700">Message / Notes</label>
         <textarea
           value={form.message}
           onChange={(event) => updateField("message", event.target.value)}
           rows={4}
           className="w-full min-h-[110px] rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-base outline-none transition focus:border-amber-500 focus:bg-white"
-          placeholder="Tell Dave anything helpful about your goals..."
+          placeholder="Example: I’m thinking about selling this spring, buying in North Kildonan, or just want to understand prices..."
         />
       </div>
 
       <label className="mt-4 flex items-start gap-3 rounded-2xl bg-slate-50 p-4 text-sm text-slate-600">
-        <input
-          type="checkbox"
-          checked={form.consent}
-          onChange={(event) => updateField("consent", event.target.checked)}
-          required
-          className="mt-1 h-5 w-5 shrink-0"
-        />
-        <span>I consent to Dave Lowery contacting me about my real estate inquiry.</span>
+        <input type="checkbox" checked={form.consent} onChange={(event) => updateField("consent", event.target.checked)} required className="mt-1 h-5 w-5 shrink-0" />
+        <span>I agree that Dave Lowery may contact me about this real estate request. No spam — just follow-up about this inquiry.</span>
       </label>
 
       {submitError ? <p className="mt-4 rounded-xl bg-red-50 p-3 text-sm font-bold text-red-700">{submitError}</p> : null}
 
-      <button
-        type="submit"
-        disabled={submitting}
-        className="mt-5 flex min-h-[52px] w-full items-center justify-center gap-2 rounded-2xl px-5 py-4 text-base font-black uppercase tracking-wide text-white shadow-xl transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60"
-        style={{ backgroundColor: NAVY }}
-      >
-        {submitting ? "Sending..." : "Send My Request"} <Icon name="right" size={18} />
+      <button type="submit" disabled={submitting} className="mt-5 flex min-h-[54px] w-full items-center justify-center gap-2 rounded-2xl px-5 py-4 text-base font-black uppercase tracking-wide text-white shadow-xl transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60" style={{ backgroundColor: NAVY }}>
+        {submitting ? "Sending..." : "Get My Next Step"} <Icon name="right" size={18} />
       </button>
+
+      <div className="mt-4 rounded-2xl bg-slate-50 p-4 text-center">
+        <p className="text-xs font-black uppercase tracking-wide text-slate-500">Fast follow-up • Local advice • No pressure</p>
+      </div>
     </form>
   );
 }
@@ -459,23 +453,35 @@ function MarketReportFields({ form, updateField }) {
   );
 }
 
-function ThankYou({ resetApp }) {
+function SuccessScreen({ resetFlow }) {
   return (
-    <div className="flex min-h-[520px] flex-col items-center justify-center px-2 text-center sm:min-h-[620px]">
-      <div className="mb-5 flex h-20 w-20 items-center justify-center rounded-full bg-green-100 text-green-700">
+    <section className="mx-auto max-w-3xl rounded-[2rem] border border-white/10 bg-white/[0.06] p-6 text-center shadow-2xl backdrop-blur sm:p-10">
+      <div className="mx-auto mb-5 flex h-20 w-20 items-center justify-center rounded-full bg-emerald-400/10 text-emerald-200">
         <Icon name="check" size={42} />
       </div>
-      <p className="text-sm font-bold uppercase tracking-[0.22em]" style={{ color: GOLD }}>Request received</p>
-      <h2 className="mt-3 text-3xl font-black tracking-tight sm:text-4xl">Thanks — Dave will be in touch shortly.</h2>
-      <p className="mt-4 max-w-md text-slate-600">
-        Your information has been captured. Dave can now follow up with neighbourhood-specific advice and next steps.
+      <p className="text-xs font-black uppercase tracking-[0.24em]" style={{ color: GOLD }}>Request received</p>
+      <h1 className="mt-3 text-4xl font-black tracking-tight sm:text-5xl">You’re in. Dave will be in touch shortly.</h1>
+      <p className="mt-2 text-lg font-bold text-amber-200">
+        Dave typically responds within 24 hours
       </p>
-      <div className="mt-8 grid w-full max-w-md grid-cols-1 gap-3 sm:grid-cols-2">
-        <a href="tel:2047973000" className="rounded-2xl border border-slate-200 px-4 py-3 font-bold hover:bg-slate-50">Call Dave</a>
-        <a href="mailto:info@davelowery.com" className="rounded-2xl px-4 py-3 font-bold text-white" style={{ backgroundColor: GOLD }}>Email Dave</a>
+      <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed text-white/65">Your information has been sent directly into Dave’s private lead dashboard. He can review your goals and follow up with the right next step.</p>
+
+      <div className="mt-8 grid gap-3 sm:grid-cols-4">
+        <a href="tel:2047973000" className="rounded-2xl border border-emerald-400/30 bg-emerald-400/10 px-4 py-4 font-black uppercase tracking-wide text-emerald-100">Call Dave</a>
+        <a href="mailto:info@davelowery.com" className="rounded-2xl border border-blue-400/30 bg-blue-400/10 px-4 py-4 font-black uppercase tracking-wide text-blue-100">Email Dave</a>
+        <button type="button" onClick={resetFlow} className="rounded-2xl border border-white/10 bg-white/10 px-4 py-4 font-black uppercase tracking-wide text-white hover:bg-white/15">Start Over</button>
+        <a href="/" className="rounded-2xl border border-white/10 bg-white/10 px-4 py-4 font-black uppercase tracking-wide text-white hover:bg-white/15">Back to Home</a>
       </div>
-      <button type="button" onClick={resetApp} className="mt-6 text-sm font-bold text-slate-500 hover:text-slate-950">Start another request</button>
-    </div>
+
+      <div className="mt-8 rounded-3xl border border-white/10 bg-black/20 p-5 text-left">
+        <p className="font-black text-white">What happens next?</p>
+        <div className="mt-4 grid gap-3 text-sm text-white/65 sm:grid-cols-3">
+          <p>✓ Dave reviews your request</p>
+          <p>✓ You receive a direct follow-up</p>
+          <p>✓ You get a clear next step</p>
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -486,16 +492,10 @@ function Section({ children }) {
 function Input({ label, value, onChange, type = "text", required = false, icon }) {
   return (
     <label className="block">
-      <span className="mb-2 block text-sm font-bold text-slate-700">{label}{required ? " *" : ""}</span>
+      <span className="mb-2 block text-sm font-black text-slate-700">{label}{required ? " *" : ""}</span>
       <div className="relative">
         {icon ? <Icon name={icon} size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" /> : null}
-        <input
-          type={type}
-          value={value}
-          onChange={(event) => onChange(event.target.value)}
-          required={required}
-          className={`w-full min-h-[48px] rounded-2xl border border-slate-200 bg-slate-50 py-3 text-base outline-none transition focus:border-amber-500 focus:bg-white ${icon ? "pl-10 pr-4" : "px-4"}`}
-        />
+        <input type={type} value={value} onChange={(event) => onChange(event.target.value)} required={required} className={`w-full min-h-[50px] rounded-2xl border border-slate-200 bg-slate-50 py-3 text-base outline-none transition focus:border-amber-500 focus:bg-white ${icon ? "pl-10 pr-4" : "px-4"}`} />
       </div>
     </label>
   );
@@ -504,16 +504,10 @@ function Input({ label, value, onChange, type = "text", required = false, icon }
 function Select({ label, value, onChange, options }) {
   return (
     <label className="block">
-      <span className="mb-2 block text-sm font-bold text-slate-700">{label}</span>
-      <select
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-        className="w-full min-h-[48px] rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-base outline-none transition focus:border-amber-500 focus:bg-white"
-      >
+      <span className="mb-2 block text-sm font-black text-slate-700">{label}</span>
+      <select value={value} onChange={(event) => onChange(event.target.value)} className="w-full min-h-[50px] rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-base outline-none transition focus:border-amber-500 focus:bg-white">
         <option value="">Select...</option>
-        {options.map((option) => (
-          <option key={option} value={option}>{option}</option>
-        ))}
+        {options.map((option) => <option key={option} value={option}>{option}</option>)}
       </select>
     </label>
   );
