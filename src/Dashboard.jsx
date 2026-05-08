@@ -220,6 +220,35 @@ export default function Dashboard() {
     await fetchLeads();
   }
 
+  async function deleteLead(id) {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this lead? This cannot be undone."
+    );
+
+    if (!confirmed) return;
+
+    const supabase = getSupabaseClient();
+
+    if (!supabase) {
+      setErrorMessage("Supabase is not connected.");
+      return;
+    }
+
+    const { error } = await supabase
+      .from("leads")
+      .delete()
+      .eq("id", id);
+
+    if (error) {
+      console.error("Delete lead error:", error);
+      setErrorMessage("Could not delete lead. Confirm your Supabase delete policy is enabled.");
+      return;
+    }
+
+    setSelectedLead(null);
+    await fetchLeads();
+  }
+
   async function advanceLeadStage(lead) {
     const nextStage = getNextStage(lead.status || "new");
     await updateLead(lead.id, {
@@ -367,7 +396,12 @@ export default function Dashboard() {
       </main>
 
       {selectedLead ? (
-        <LeadDrawer lead={selectedLead} close={() => setSelectedLead(null)} updateLead={updateLead} />
+        <LeadDrawer
+          lead={selectedLead}
+          close={() => setSelectedLead(null)}
+          updateLead={updateLead}
+          deleteLead={deleteLead}
+        />
       ) : null}
     </div>
   );
@@ -544,7 +578,7 @@ function StatusPill({ status }) {
   );
 }
 
-function LeadDrawer({ lead, close, updateLead }) {
+function LeadDrawer({ lead, close, updateLead, deleteLead }) {
   const [editing, setEditing] = useState({ ...lead });
   const [saving, setSaving] = useState(false);
 
@@ -684,12 +718,19 @@ function LeadDrawer({ lead, close, updateLead }) {
           />
         </div>
 
-        <div className="mt-6 grid gap-3 sm:grid-cols-2">
+        <div className="mt-6 grid gap-3 sm:grid-cols-3">
           <button onClick={saveDrawerChanges} disabled={saving} className="rounded-2xl px-5 py-4 text-sm font-black uppercase tracking-wide text-white shadow-xl disabled:cursor-not-allowed disabled:opacity-60" style={{ backgroundColor: GOLD }}>
             {saving ? "Saving..." : "Save All Changes"}
           </button>
           <button onClick={close} className="rounded-2xl border border-white/10 bg-white/10 px-5 py-4 text-sm font-black uppercase tracking-wide text-white hover:bg-white/15">
             Cancel
+          </button>
+          <button
+            type="button"
+            onClick={() => deleteLead(lead.id)}
+            className="rounded-2xl border border-red-400/30 bg-red-500/10 px-5 py-4 text-sm font-black uppercase tracking-wide text-red-100 hover:bg-red-500/20"
+          >
+            Delete Lead
           </button>
         </div>
 
