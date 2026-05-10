@@ -10,7 +10,7 @@ const leadTypeLabels = {
   market_report: "Market Report",
 };
 
-const pipelineStages = ["new", "contacted", "showing", "offer", "closed"];
+const pipelineStages = ["new", "contacted", "showing", "offer", "closed", "archived"];
 
 const stageLabels = {
   new: "New",
@@ -18,6 +18,7 @@ const stageLabels = {
   showing: "Showing",
   offer: "Offer",
   closed: "Closed",
+  archived: "Archived",
 };
 
 const priorityLabels = {
@@ -154,7 +155,7 @@ export default function Dashboard() {
       setAuthChecking(false);
       await fetchLeads();
 
-      intervalId = setInterval(fetchLeads, 10000);
+
     }
 
     checkAuthAndLoad();
@@ -163,6 +164,13 @@ export default function Dashboard() {
       if (intervalId) clearInterval(intervalId);
     };
   }, []);
+
+  useEffect(() => {
+    if (!authChecking) {
+      fetchLeads();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [statusFilter]);
 
   async function fetchLeads() {
     setLoading(true);
@@ -176,10 +184,19 @@ export default function Dashboard() {
       return;
     }
 
-    const { data, error } = await supabase
+    let query = supabase
       .from("leads")
       .select("*")
       .order("submitted_at", { ascending: false });
+
+    // Keep archived leads out of the main dashboard unless the Archived filter is selected.
+    if (statusFilter === "archived") {
+      query = query.eq("status", "archived");
+    } else {
+      query = query.neq("status", "archived");
+    }
+
+    const { data, error } = await query;
 
     if (error) {
       console.error("Dashboard fetch error:", error);
@@ -220,34 +237,22 @@ export default function Dashboard() {
     await fetchLeads();
   }
 
-  async function deleteLead(id) {
+  async function archiveLead(id) {
     const confirmed = window.confirm(
-      "Are you sure you want to delete this lead? This cannot be undone."
+      "Archive this lead? It will be hidden from the main dashboard but kept in Supabase."
     );
 
     if (!confirmed) return;
 
-    const supabase = getSupabaseClient();
-
-    if (!supabase) {
-      setErrorMessage("Supabase is not connected.");
-      return;
-    }
-
-    const { error } = await supabase
-      .from("leads")
-      .delete()
-      .eq("id", id);
-
-    if (error) {
-      console.error("Delete lead error:", error);
-      setErrorMessage("Could not delete lead. Confirm your Supabase delete policy is enabled.");
-      return;
-    }
-
+    await updateLead(id, { status: "archived" });
     setSelectedLead(null);
-    await fetchLeads();
   }
+
+async function unarchiveLead(id) {
+  await updateLead(id, { status: "new" });
+  setStatusFilter("all");
+  setSelectedLead(null);
+}
 
   async function advanceLeadStage(lead) {
     const nextStage = getNextStage(lead.status || "new");
@@ -387,6 +392,7 @@ export default function Dashboard() {
                     openLead={() => setSelectedLead(lead)}
                     advanceLeadStage={advanceLeadStage}
                     updatePriority={updatePriority}
+                    archiveLead={archiveLead}
                   />
                 ))}
               </div>
@@ -400,7 +406,8 @@ export default function Dashboard() {
           lead={selectedLead}
           close={() => setSelectedLead(null)}
           updateLead={updateLead}
-          deleteLead={deleteLead}
+          archiveLead={archiveLead}
+          unarchiveLead={unarchiveLead}
         />
       ) : null}
     </div>
@@ -458,7 +465,7 @@ function StatCard({ label, value, accent }) {
   );
 }
 
-function LeadRowCard({ lead, openLead, advanceLeadStage, updatePriority }) {
+function LeadRowCard({ lead, openLead, advanceLeadStage, updatePriority, archiveLead }) {
   return (
     <div className="grid gap-4 rounded-2xl border border-white/10 bg-black/20 p-4 transition hover:bg-white/[0.04] lg:grid-cols-[1.3fr_1fr_1fr_0.8fr_0.8fr_1fr] lg:items-center">
       <button type="button" onClick={openLead} className="text-left">
@@ -523,10 +530,21 @@ function LeadRowCard({ lead, openLead, advanceLeadStage, updatePriority }) {
         <button
           type="button"
           onClick={() => advanceLeadStage(lead)}
-          disabled={(lead.status || "new") === "closed"}
+          disabled={["closed", "archived"].includes(lead.status || "new")}
           className="rounded-xl border border-emerald-400/30 bg-emerald-400/10 px-3 py-2 text-xs font-black uppercase tracking-wide text-emerald-200 transition hover:bg-emerald-400/20 disabled:cursor-not-allowed disabled:opacity-50"
         >
-          {(lead.status || "new") === "closed" ? "✓ Closed" : `Move: ${stageLabels[getNextStage(lead.status || "new")]}`}
+          {(lead.status || "new") === "closed"
+            ? "✓ Closed"
+            : (lead.status || "new") === "archived"
+              ? "Archived"
+              : `Move: ${stageLabels[getNextStage(lead.status || "new")]}`}
+        </button>
+        <button
+          type="button"
+          onClick={() => archiveLead(lead.id)}
+          className="rounded-xl border border-amber-400/30 bg-amber-400/10 px-3 py-2 text-xs font-black uppercase tracking-wide text-amber-100 transition hover:bg-amber-400/20"
+        >
+          Archive
         </button>
       </div>
     </div>
@@ -569,6 +587,7 @@ function StatusPill({ status }) {
     showing: "border-blue-400/30 bg-blue-400/10 text-blue-200",
     offer: "border-purple-400/30 bg-purple-400/10 text-purple-200",
     closed: "border-white/30 bg-white/15 text-white",
+    archived: "border-slate-400/30 bg-slate-500/10 text-slate-200",
   };
 
   return (
@@ -578,7 +597,7 @@ function StatusPill({ status }) {
   );
 }
 
-function LeadDrawer({ lead, close, updateLead, deleteLead }) {
+function LeadDrawer({ lead, close, updateLead, archiveLead, unarchiveLead }) {
   const [editing, setEditing] = useState({ ...lead });
   const [saving, setSaving] = useState(false);
 
@@ -722,16 +741,28 @@ function LeadDrawer({ lead, close, updateLead, deleteLead }) {
           <button onClick={saveDrawerChanges} disabled={saving} className="rounded-2xl px-5 py-4 text-sm font-black uppercase tracking-wide text-white shadow-xl disabled:cursor-not-allowed disabled:opacity-60" style={{ backgroundColor: GOLD }}>
             {saving ? "Saving..." : "Save All Changes"}
           </button>
+
           <button onClick={close} className="rounded-2xl border border-white/10 bg-white/10 px-5 py-4 text-sm font-black uppercase tracking-wide text-white hover:bg-white/15">
             Cancel
           </button>
-          <button
-            type="button"
-            onClick={() => deleteLead(lead.id)}
-            className="rounded-2xl border border-red-400/30 bg-red-500/10 px-5 py-4 text-sm font-black uppercase tracking-wide text-red-100 hover:bg-red-500/20"
-          >
-            Delete Lead
-          </button>
+
+          {(lead.status || "new") === "archived" ? (
+            <button
+              type="button"
+              onClick={() => unarchiveLead(lead.id)}
+              className="rounded-2xl border border-green-400/30 bg-green-500/10 px-5 py-4 text-sm font-black uppercase tracking-wide text-green-100 hover:bg-green-500/20"
+            >
+              Restore Lead
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={() => archiveLead(lead.id)}
+              className="rounded-2xl border border-amber-400/30 bg-amber-500/10 px-5 py-4 text-sm font-black uppercase tracking-wide text-amber-100 hover:bg-amber-500/20"
+            >
+              Archive Lead
+            </button>
+          )}
         </div>
 
         <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.05] p-4">
