@@ -347,8 +347,17 @@ export default function Dashboard() {
   }
 
   async function unarchiveLead(id) {
-    await updateLead(id, { status: "new" });
+    const confirmed = window.confirm("Restore this lead? They will return to the active Leads tab.");
+    if (!confirmed) return;
+
+    const restored = await updateLead(id, { status: "new" });
+    if (!restored) return;
+
     setSelectedLead(null);
+    setSearch("");
+    setTypeFilter("all");
+    setStatusFilter("all");
+    setPriorityFilter("all");
     setActiveTab("leads");
   }
 
@@ -360,8 +369,15 @@ export default function Dashboard() {
   }
 
   async function restoreClient(id) {
-    await updateClient(id, { archived: false });
+    const confirmed = window.confirm("Restore this client? They will return to the Clients / Mailing List tab.");
+    if (!confirmed) return;
+
+    const restored = await updateClient(id, { archived: false });
+    if (!restored) return;
+
     setSelectedClient(null);
+    setSearch("");
+    setClientStatusFilter("all");
     setActiveTab("clients");
   }
 
@@ -1040,8 +1056,8 @@ function ArchivedLeadRow({ lead, openLead, restore }) {
       <p className="font-black text-white">{lead.first_name || "Unknown"} {lead.last_name || ""}</p>
       <p className="mt-1 text-sm text-white/45">{lead.email || "No email"} {lead.phone ? `• ${lead.phone}` : ""}</p>
       <div className="mt-3 flex gap-2">
-        <button onClick={openLead} className="rounded-xl border border-blue-400/30 bg-blue-400/10 px-3 py-2 text-xs font-black uppercase text-blue-100">View</button>
-        <button onClick={restore} className="rounded-xl border border-green-400/30 bg-green-400/10 px-3 py-2 text-xs font-black uppercase text-green-100">Restore</button>
+        <button type="button" onClick={openLead} className="rounded-xl border border-blue-400/30 bg-blue-400/10 px-3 py-2 text-xs font-black uppercase text-blue-100">View</button>
+        <button type="button" onClick={restore} className="rounded-xl border border-green-400/30 bg-green-400/10 px-3 py-2 text-xs font-black uppercase text-green-100">Restore</button>
       </div>
     </div>
   );
@@ -1053,8 +1069,8 @@ function ArchivedClientRow({ client, openClient, restore }) {
       <p className="font-black text-white">{client.name_first || "Unknown"} {client.name_last || ""}</p>
       <p className="mt-1 text-sm text-white/45">{client.email || "No email"} {client.cell_number ? `• ${client.cell_number}` : ""}</p>
       <div className="mt-3 flex gap-2">
-        <button onClick={openClient} className="rounded-xl border border-blue-400/30 bg-blue-400/10 px-3 py-2 text-xs font-black uppercase text-blue-100">View</button>
-        <button onClick={restore} className="rounded-xl border border-green-400/30 bg-green-400/10 px-3 py-2 text-xs font-black uppercase text-green-100">Restore</button>
+        <button type="button" onClick={openClient} className="rounded-xl border border-blue-400/30 bg-blue-400/10 px-3 py-2 text-xs font-black uppercase text-blue-100">View</button>
+        <button type="button" onClick={restore} className="rounded-xl border border-green-400/30 bg-green-400/10 px-3 py-2 text-xs font-black uppercase text-green-100">Restore</button>
       </div>
     </div>
   );
