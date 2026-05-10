@@ -672,25 +672,38 @@ function Header({ refresh, lastUpdated, signOut }) {
 
 function TabBar({ activeTab, setActiveTab }) {
   const tabs = [
-    ["leads", "Leads"],
-    ["clients", "Clients / Mailing List"],
-    ["archived", "Archived"],
+    {
+      value: "leads",
+      label: "Leads",
+      activeClass: "border-[#C8A44D]/80 bg-[#C8A44D] text-black shadow-xl shadow-[#C8A44D]/20",
+      inactiveClass: "border-[#C8A44D]/40 bg-[#C8A44D]/12 text-[#F6E6B5] hover:bg-[#C8A44D]/20 hover:text-white",
+    },
+    {
+      value: "clients",
+      label: "Clients / Mailing List",
+      activeClass: "border-blue-300/80 bg-blue-600 text-white shadow-xl shadow-blue-600/20",
+      inactiveClass: "border-blue-400/40 bg-blue-500/10 text-blue-100 hover:bg-blue-500/20 hover:text-white",
+    },
+    {
+      value: "archived",
+      label: "Archived",
+      activeClass: "border-slate-300/70 bg-slate-600 text-white shadow-xl shadow-slate-700/20",
+      inactiveClass: "border-slate-400/30 bg-slate-500/10 text-slate-200 hover:bg-slate-500/20 hover:text-white",
+    },
   ];
 
   return (
     <div className="mt-6 grid gap-3 sm:grid-cols-3">
-      {tabs.map(([value, label]) => (
+      {tabs.map((tab) => (
         <button
-          key={value}
+          key={tab.value}
           type="button"
-          onClick={() => setActiveTab(value)}
-          className={`rounded-2xl border px-5 py-4 text-sm font-black uppercase tracking-wide transition ${
-            activeTab === value
-              ? "border-amber-400/60 bg-amber-400/20 text-amber-100 shadow-xl"
-              : "border-white/10 bg-white/[0.06] text-white/70 hover:bg-white/[0.1]"
+          onClick={() => setActiveTab(tab.value)}
+          className={`rounded-2xl border px-5 py-4 text-sm font-black uppercase tracking-wide transition hover:-translate-y-0.5 ${
+            activeTab === tab.value ? tab.activeClass : tab.inactiveClass
           }`}
         >
-          {label}
+          {tab.label}
         </button>
       ))}
     </div>
