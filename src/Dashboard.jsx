@@ -138,7 +138,14 @@ function filterClients(clients, search, statusFilter = "all") {
       .join(" ")
       .toLowerCase();
 
-    return (!term || searchable.includes(term)) && (statusFilter === "all" || client.status === statusFilter);
+    const matchesSearch = !term || searchable.includes(term);
+    const matchesStatus =
+      statusFilter === "all" ||
+      (statusFilter === "contacted_any" && (client.contacted || client.status === "Contacted")) ||
+      (statusFilter === "converted_any" && (client.converted_to_lead || client.status === "Converted to Lead")) ||
+      client.status === statusFilter;
+
+    return matchesSearch && matchesStatus;
   });
 }
 
@@ -727,16 +734,65 @@ function LeadsPanel({
   updatePriority,
   archiveLead,
 }) {
+  function showLeadView({ type = "all", status = "all", priority = "all" }) {
+    setSearch("");
+    setTypeFilter(type);
+    setStatusFilter(status);
+    setPriorityFilter(priority);
+  }
+
   return (
     <>
       <section className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-7">
-        <StatCard label="Total Leads" value={stats.total} accent={GOLD} />
-        <StatCard label="New Leads" value={stats.newLeads} accent="#38BDF8" />
-        <StatCard label="Hot Leads" value={stats.hotLeads} accent="#EF4444" />
-        <StatCard label="Buyers" value={stats.buyers} accent="#22C55E" />
-        <StatCard label="Sellers" value={stats.sellers} accent={RED} />
-        <StatCard label="Investors" value={stats.investors} accent="#A855F7" />
-        <StatCard label="Reports" value={stats.marketReports} accent="#F97316" />
+        <StatCard
+          label="Total Leads"
+          value={stats.total}
+          accent={GOLD}
+          onClick={() => showLeadView({})}
+          active={typeFilter === "all" && statusFilter === "all" && priorityFilter === "all"}
+        />
+        <StatCard
+          label="New Leads"
+          value={stats.newLeads}
+          accent="#38BDF8"
+          onClick={() => showLeadView({ status: "new" })}
+          active={typeFilter === "all" && statusFilter === "new" && priorityFilter === "all"}
+        />
+        <StatCard
+          label="Hot Leads"
+          value={stats.hotLeads}
+          accent="#EF4444"
+          onClick={() => showLeadView({ priority: "hot" })}
+          active={typeFilter === "all" && statusFilter === "all" && priorityFilter === "hot"}
+        />
+        <StatCard
+          label="Buyers"
+          value={stats.buyers}
+          accent="#22C55E"
+          onClick={() => showLeadView({ type: "buy" })}
+          active={typeFilter === "buy" && statusFilter === "all" && priorityFilter === "all"}
+        />
+        <StatCard
+          label="Sellers"
+          value={stats.sellers}
+          accent={RED}
+          onClick={() => showLeadView({ type: "sell" })}
+          active={typeFilter === "sell" && statusFilter === "all" && priorityFilter === "all"}
+        />
+        <StatCard
+          label="Investors"
+          value={stats.investors}
+          accent="#A855F7"
+          onClick={() => showLeadView({ type: "invest" })}
+          active={typeFilter === "invest" && statusFilter === "all" && priorityFilter === "all"}
+        />
+        <StatCard
+          label="Reports"
+          value={stats.marketReports}
+          accent="#F97316"
+          onClick={() => showLeadView({ type: "market_report" })}
+          active={typeFilter === "market_report" && statusFilter === "all" && priorityFilter === "all"}
+        />
       </section>
 
       <section className="mt-6 rounded-[2rem] border border-white/10 bg-white/[0.06] p-4 shadow-2xl backdrop-blur sm:p-5">
@@ -767,20 +823,36 @@ function LeadsPanel({
 }
 
 function ClientsPanel({ clientStats, search, setSearch, clientStatusFilter, setClientStatusFilter, loading, clients, openClient, archiveClient, convertClientToLead }) {
+  function showClientStatus(status) {
+    setSearch("");
+    setClientStatusFilter(status);
+  }
+
   return (
     <>
       <section className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <StatCard label="Clients" value={clientStats.total} accent={GOLD} />
-        <StatCard label="Not Contacted" value={clientStats.notContacted} accent="#38BDF8" />
-        <StatCard label="Contacted" value={clientStats.contacted} accent="#22C55E" />
-        <StatCard label="Converted" value={clientStats.converted} accent="#A855F7" />
+        <StatCard label="Clients" value={clientStats.total} accent={GOLD} onClick={() => showClientStatus("all")} active={clientStatusFilter === "all"} />
+        <StatCard label="Not Contacted" value={clientStats.notContacted} accent="#38BDF8" onClick={() => showClientStatus("Not Contacted")} active={clientStatusFilter === "Not Contacted"} />
+        <StatCard label="Contacted" value={clientStats.contacted} accent="#22C55E" onClick={() => showClientStatus("contacted_any")} active={clientStatusFilter === "contacted_any"} />
+        <StatCard label="Converted" value={clientStats.converted} accent="#A855F7" onClick={() => showClientStatus("converted_any")} active={clientStatusFilter === "converted_any"} />
       </section>
 
       <section className="mt-6 rounded-[2rem] border border-white/10 bg-white/[0.06] p-4 shadow-2xl backdrop-blur sm:p-5">
         <PanelHeader eyebrow="Client Database" title="Clients / Mailing List" />
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
           <SearchBox value={search} onChange={setSearch} placeholder="Search clients by name, email, phone..." />
-          <FilterSelect value={clientStatusFilter} onChange={setClientStatusFilter} options={[["all", "All Client Statuses"], ...clientStatuses.map((status) => [status, status])]} />
+          <FilterSelect
+            value={clientStatusFilter}
+            onChange={setClientStatusFilter}
+            options={[
+              ["all", "All Client Statuses"],
+              ["contacted_any", "Contacted"],
+              ["converted_any", "Converted to Lead"],
+              ...clientStatuses
+                .filter((status) => !["Contacted", "Converted to Lead"].includes(status))
+                .map((status) => [status, status]),
+            ]}
+          />
         </div>
 
         <div className="mt-5 overflow-hidden rounded-3xl border border-white/10">
@@ -874,14 +946,31 @@ function EmptyState({ text }) {
   return <div className="flex min-h-[220px] items-center justify-center text-center text-white/60">{text}</div>;
 }
 
-function StatCard({ label, value, accent }) {
-  return (
-    <div className="rounded-[1.5rem] border border-white/10 bg-white/[0.06] p-5 shadow-xl backdrop-blur">
+function StatCard({ label, value, accent, onClick, active = false }) {
+  const content = (
+    <>
       <div className="mb-4 h-1.5 w-12 rounded-full" style={{ backgroundColor: accent }} />
       <p className="text-4xl font-black tracking-tight">{value}</p>
       <p className="mt-1 text-xs font-black uppercase tracking-[0.18em] text-white/45">{label}</p>
-    </div>
+      {onClick ? <p className="mt-3 text-[0.65rem] font-black uppercase tracking-[0.18em] text-white/35">Click to view</p> : null}
+    </>
   );
+
+  if (onClick) {
+    return (
+      <button
+        type="button"
+        onClick={onClick}
+        className={`rounded-[1.5rem] border bg-white/[0.06] p-5 text-left shadow-xl backdrop-blur transition hover:-translate-y-0.5 hover:bg-white/[0.1] ${
+          active ? "border-white/35 ring-2 ring-white/20" : "border-white/10"
+        }`}
+      >
+        {content}
+      </button>
+    );
+  }
+
+  return <div className="rounded-[1.5rem] border border-white/10 bg-white/[0.06] p-5 shadow-xl backdrop-blur">{content}</div>;
 }
 
 function LeadRowCard({ lead, openLead, advanceLeadStage, updatePriority, archiveLead }) {
