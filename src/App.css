@@ -412,3 +412,62 @@ select:focus,
 textarea:focus {
   border-color: var(--rl-red) !important;
 }
+
+
+/* =======================================================
+   GLOBAL WHITE BACKGROUND OVERRIDE
+======================================================= */
+
+html,
+body,
+#root,
+.app,
+main,
+.dashboard,
+.dashboard-shell,
+.page-shell,
+.layout-shell {
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+}
+
+/* Main panels stay lightly elevated */
+section,
+.panel,
+.card,
+.dashboard-card,
+.client-database,
+.lead-command-centre,
+.pipeline-section {
+  background: #ffffff !important;
+  border: 1px solid rgba(0,0,0,0.08) !important;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.06) !important;
+}
+
+/* Text colors for white theme */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+strong,
+.title,
+.heading {
+  color: #111111 !important;
+}
+
+p,
+span,
+label,
+small {
+  color: #444444 !important;
+}
+
+/* Keep Royal LePage red accents */
+button,
+.badge,
+.stat-accent,
+.hero-pill {
+  accent-color: #E31837 !important;
+}
