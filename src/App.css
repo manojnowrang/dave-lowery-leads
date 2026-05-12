@@ -183,213 +183,164 @@
   }
 }
 
-/* =======================================================
-   FORCE COMPACT ADMIN DASHBOARD ROWS
-   Covers Dave Lowery admin dashboard record cards even when
-   the JSX uses Tailwind utility classes instead of custom names.
-======================================================= */
+/* === COMPACT LEAD ROWS === */
 
-/* tighten the database/list panel */
-[class*="Database"],
-[class*="Command"],
-.client-database,
-.lead-command-centre,
-.pipeline-section {
-  padding: 16px 18px !important;
-}
-
-/* compact the inner list wrapper */
-.client-list,
-.lead-list,
-.pipeline-list,
-.clients-list,
-.leads-list,
-[class*="client-list"],
-[class*="lead-list"],
-[class*="pipeline-list"] {
-  gap: 8px !important;
-}
-
-/* exact custom class support */
-.pipeline-record,
-.client-record,
-.lead-record,
-.record-card,
-.client-card,
 .lead-card,
 .pipeline-card,
-.client-list-card,
-.lead-list-card {
+.client-card {
+  padding: 10px 14px !important;
+  min-height: 86px !important;
+}
+
+.lead-row,
+.client-row {
   display: grid !important;
-  grid-template-columns: minmax(190px, 1.55fr) minmax(120px, 0.85fr) minmax(160px, 1.2fr) minmax(120px, 0.8fr) auto !important;
+  grid-template-columns: 220px 150px 170px 150px 140px 150px !important;
   align-items: center !important;
-  gap: 12px !important;
-  min-height: 64px !important;
-  padding: 8px 14px !important;
-  margin-bottom: 8px !important;
-  border-radius: 16px !important;
+  gap: 14px !important;
 }
 
-/* Tailwind fallback: targets the large rounded record cards inside the list panel */
-main section div.rounded-\[1\.75rem\] div.rounded-\[1\.25rem\],
-main section div.rounded-\[1\.75rem\] div.rounded-2xl,
-main .rounded-\[1\.75rem\] .rounded-2xl {
-  min-height: 64px !important;
-  padding-top: 8px !important;
-  padding-bottom: 8px !important;
-}
-
-/* text tightening */
-.pipeline-record h3,
-.client-record h3,
-.lead-record h3,
-.record-card h3,
-.client-card h3,
-.lead-card h3,
-.pipeline-record p,
-.client-record p,
-.lead-record p,
-.record-card p,
-.client-card p,
-.lead-card p {
-  margin-top: 0 !important;
-  margin-bottom: 2px !important;
-  line-height: 1.12 !important;
-}
-
-.pipeline-record h3,
-.client-record h3,
-.lead-record h3,
-.record-card h3,
-.client-card h3,
-.lead-card h3 {
+.lead-name,
+.client-name {
   font-size: 16px !important;
+  line-height: 1.1 !important;
+  margin-bottom: 3px !important;
 }
 
-.pipeline-record p,
-.client-record p,
-.lead-record p,
-.record-card p,
-.client-card p,
-.lead-card p,
-.pipeline-record span,
-.client-record span,
-.lead-record span,
-.record-card span,
-.client-card span,
-.lead-card span {
+.lead-subtext,
+.client-subtext,
+.lead-meta,
+.client-meta {
   font-size: 12px !important;
-  line-height: 1.12 !important;
-}
-
-/* badge tightening */
-.badge,
-.status-badge,
-.type-badge,
-.pipeline-record span,
-.client-record span,
-.lead-record span {
-  line-height: 1 !important;
+  line-height: 1.15 !important;
 }
 
 .badge,
 .status-badge,
 .type-badge {
-  font-size: 10px !important;
-  padding: 4px 9px !important;
-  min-height: 20px !important;
-  border-radius: 999px !important;
+  font-size: 11px !important;
+  padding: 4px 10px !important;
+  line-height: 1 !important;
+  min-height: 22px !important;
 }
 
-/* button stack tightening */
-.pipeline-actions,
-.client-actions,
 .lead-actions,
-.record-actions {
+.client-actions {
   display: flex !important;
   flex-direction: column !important;
+  gap: 6px !important;
   align-items: flex-end !important;
-  gap: 5px !important;
 }
 
-.pipeline-record button,
-.client-record button,
-.lead-record button,
-.record-card button,
-.client-card button,
-.lead-card button,
+.lead-actions button,
+.client-actions button,
 .action-btn,
 .edit-btn,
 .archive-btn,
-.move-btn,
-.convert-btn {
-  min-height: 26px !important;
-  padding: 6px 10px !important;
+.move-btn {
   font-size: 11px !important;
-  line-height: 1 !important;
+  padding: 7px 12px !important;
+  min-height: 30px !important;
   border-radius: 10px !important;
+  line-height: 1 !important;
 }
 
-@media (max-width: 900px) {
-  .pipeline-record,
-  .client-record,
-  .lead-record,
-  .record-card,
-  .client-card,
-  .lead-card,
-  .pipeline-card,
-  .client-list-card,
-  .lead-list-card {
-    grid-template-columns: 1fr !important;
-    align-items: stretch !important;
-  }
-
-  .pipeline-actions,
-  .client-actions,
-  .lead-actions,
-  .record-actions {
-    flex-direction: row !important;
-    justify-content: flex-start !important;
-    align-items: center !important;
-  }
+.pipeline-list,
+.leads-list,
+.clients-list {
+  gap: 8px !important;
 }
 
+.pipeline-section,
+.lead-command-centre {
+  padding: 18px 20px !important;
+}
 
 /* =======================================================
-   THINNER TOP DASHBOARD ROWS: Tabs + Count/KPI Cards
-   Added for the Dave Lowery Admin dashboard screenshot.
+   ROYAL LEPAGE BRAND REFRESH
+   Black / white / Royal LePage red with silver-gray accents
 ======================================================= */
-
-/* View tabs: Leads / Clients / Archived */
-.dashboard-tabs,
-.view-tabs,
-.admin-tabs,
-.tab-row,
-.segmented-tabs,
-[class*="tabs"],
-[class*="Tabs"] {
-  gap: 10px !important;
-  margin-bottom: 14px !important;
+:root {
+  --rl-red: #E31837;
+  --rl-black: #090B10;
+  --rl-charcoal: #151922;
+  --rl-panel: #1B1F29;
+  --rl-card: #202530;
+  --rl-silver: #C8CDD6;
+  --rl-muted: #9EA4B0;
+  --rl-border: rgba(255, 255, 255, 0.10);
 }
 
-.dashboard-tabs button,
-.view-tabs button,
-.admin-tabs button,
-.tab-row button,
-.segmented-tabs button,
+body {
+  background: var(--rl-black) !important;
+}
+
+/* Global Royal LePage accent replacement */
+.text-amber-100,
+.text-amber-200,
+.text-blue-100,
+.text-blue-200 {
+  color: #FFF5F6 !important;
+}
+
+.bg-amber-400\/10,
+.bg-amber-500\/10,
+.bg-blue-400\/10,
+.bg-blue-500\/10 {
+  background-color: rgba(227, 24, 55, 0.10) !important;
+}
+
+.border-amber-400\/25,
+.border-amber-400\/30,
+.border-blue-400\/30,
+.border-blue-400\/40 {
+  border-color: rgba(227, 24, 55, 0.38) !important;
+}
+
+.shadow-amber-500\/20,
+.shadow-blue-600\/20,
+.shadow-\[\#C8A44D\]\/20 {
+  --tw-shadow-color: rgba(227, 24, 55, 0.20) !important;
+}
+
+/* Hero/client-facing app */
+.hero-panel,
+.left-panel,
+.intro-panel,
+section.rounded-\[1\.75rem\].border.border-white\/10 {
+  background: linear-gradient(180deg, #171B25 0%, #101319 100%) !important;
+  border-color: rgba(227, 24, 55, 0.22) !important;
+}
+
+.hero-pill,
+.section-pill,
+.inline-flex.rounded-full.border {
+  border-color: rgba(227, 24, 55, 0.42) !important;
+}
+
+/* Admin shell */
+header.rounded-\[2rem\],
+section.rounded-\[1\.75rem\],
+aside.bg-\[\#151922\] {
+  background: linear-gradient(180deg, #171B25 0%, #101319 100%) !important;
+  border-color: rgba(227, 24, 55, 0.16) !important;
+}
+
+/* Tab and primary button red */
+[role="tab"],
 .tab-button,
 .view-tab,
-.segment-button,
-[role="tab"] {
-  min-height: 42px !important;
-  height: 42px !important;
-  padding: 8px 16px !important;
-  border-radius: 14px !important;
-  font-size: 13px !important;
-  line-height: 1 !important;
+.segment-button {
+  border-color: rgba(227, 24, 55, 0.32) !important;
 }
 
-/* KPI/count cards: Clients, Not Contacted, Contacted, Converted, Leads, etc. */
+button[style*="#E31837"],
+button[style*="rgb(227, 24, 55)"] {
+  background-color: var(--rl-red) !important;
+  color: #ffffff !important;
+}
+
+/* KPI cards and record rows */
 .stat-card,
 .stats-card,
 .metric-card,
@@ -399,55 +350,21 @@ main .rounded-\[1\.75rem\] .rounded-2xl {
 .dashboard-card,
 .client-stat-card,
 .lead-stat-card,
-.report-card {
-  min-height: 92px !important;
-  padding: 16px 20px !important;
-  border-radius: 20px !important;
+.report-card,
+.pipeline-record,
+.client-record,
+.lead-record,
+.record-card,
+.client-card,
+.lead-card,
+.pipeline-card,
+.client-list-card,
+.lead-list-card {
+  background: linear-gradient(180deg, #202530 0%, #171B23 100%) !important;
+  border-color: rgba(255, 255, 255, 0.10) !important;
 }
 
-.stat-card h2,
-.stats-card h2,
-.metric-card h2,
-.kpi-card h2,
-.summary-card h2,
-.count-card h2,
-.dashboard-card h2,
-.client-stat-card h2,
-.lead-stat-card h2,
-.report-card h2,
-.stat-card .number,
-.stats-card .number,
-.metric-card .number,
-.kpi-card .number,
-.summary-card .number,
-.count-card .number,
-.dashboard-card .number {
-  font-size: 34px !important;
-  line-height: 0.95 !important;
-  margin: 0 0 6px 0 !important;
-}
-
-.stat-card h3,
-.stats-card h3,
-.metric-card h3,
-.kpi-card h3,
-.summary-card h3,
-.count-card h3,
-.dashboard-card h3,
-.client-stat-card h3,
-.lead-stat-card h3,
-.report-card h3,
-.stat-card p,
-.stats-card p,
-.metric-card p,
-.kpi-card p,
-.summary-card p,
-.count-card p,
-.dashboard-card p {
-  margin: 0 !important;
-  line-height: 1.05 !important;
-}
-
+/* Royal LePage red accent bars */
 .stat-card .accent-line,
 .stats-card .accent-line,
 .metric-card .accent-line,
@@ -458,48 +375,40 @@ main .rounded-\[1\.75rem\] .rounded-2xl {
 .client-stat-card .accent-line,
 .lead-stat-card .accent-line,
 .report-card .accent-line {
-  width: 48px !important;
-  height: 5px !important;
-  margin-bottom: 10px !important;
-  border-radius: 999px !important;
+  background: var(--rl-red) !important;
 }
 
-/* Tailwind fallback for the stat cards shown in the screenshot. */
-main button:has(.text-4xl),
-main button:has(.text-5xl),
-main div:has(> .text-4xl),
-main div:has(> .text-5xl) {
-  min-height: 92px !important;
-  padding: 16px 20px !important;
-  border-radius: 20px !important;
+/* Badges */
+.badge,
+.status-badge,
+.type-badge {
+  border-color: rgba(227, 24, 55, 0.35) !important;
+  background: rgba(227, 24, 55, 0.10) !important;
+  color: #FFE8EB !important;
 }
 
-main .text-4xl,
-main .text-5xl {
-  font-size: 34px !important;
-  line-height: 0.95 !important;
+/* Keep call/convert/restore green for semantic actions */
+.call-btn,
+button[class*="emerald"],
+a[class*="emerald"],
+button[class*="green"],
+a[class*="green"] {
+  border-color: rgba(25, 135, 84, 0.40) !important;
+  background-color: rgba(25, 135, 84, 0.14) !important;
+  color: #D9FBEA !important;
 }
 
-main .tracking-\[\.22em\],
-main .tracking-\[0\.22em\],
-main .tracking-widest {
-  line-height: 1.05 !important;
+/* Archive/destructive actions use red family instead of gold */
+.archive-btn,
+button[class*="amber"],
+a[class*="amber"] {
+  border-color: rgba(227, 24, 55, 0.40) !important;
+  background-color: rgba(227, 24, 55, 0.12) !important;
+  color: #FFE8EB !important;
 }
 
-/* Reduce the vertical gap between tab row, stat row, and database panel. */
-.dashboard-main,
-.admin-main,
-main {
-  gap: 14px !important;
-}
-
-.stats-grid,
-.metric-grid,
-.kpi-grid,
-.summary-grid,
-[class*="stats-grid"],
-[class*="metric-grid"],
-[class*="kpi-grid"] {
-  gap: 14px !important;
-  margin-bottom: 14px !important;
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--rl-red) !important;
 }

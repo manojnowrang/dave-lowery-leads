@@ -1,11 +1,10 @@
-// Dashboard compacting note: visual row height updates are handled in App.css overrides.
 import React, { useMemo, useState } from "react";
 
-const GOLD = "#C8952D";
-const NAVY = "#061829";
-const RED = "#D71920";
+const GOLD = "#E31837";
+const NAVY = "#111111";
+const RED = "#E31837";
 const GREEN = "#0F7A4F";
-const BLUE = "#2563EB";
+const BLUE = "#3A4356";
 
 const leadTypes = [
   {
@@ -205,11 +204,11 @@ export default function DaveLoweryLeadCaptureApp() {
   }
 
   return (
-    <div className="min-h-screen overflow-hidden bg-slate-950 text-white">
+    <div className="min-h-screen overflow-hidden bg-[#090B10] text-white">
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
-        <div className="absolute -right-24 -top-24 h-80 w-80 rounded-full bg-amber-500/20 blur-3xl sm:h-96 sm:w-96" />
-        <div className="absolute -left-24 top-1/3 h-80 w-80 rounded-full bg-blue-800/25 blur-3xl" />
-        <div className="absolute bottom-[-120px] right-1/4 h-80 w-80 rounded-full bg-red-900/20 blur-3xl" />
+        <div className="absolute -right-24 -top-24 h-80 w-80 rounded-full bg-red-600/20 blur-3xl sm:h-96 sm:w-96" />
+        <div className="absolute -left-24 top-1/3 h-80 w-80 rounded-full bg-zinc-700/25 blur-3xl" />
+        <div className="absolute bottom-[-120px] right-1/4 h-80 w-80 rounded-full bg-red-700/18 blur-3xl" />
       </div>
 
       <Header />
@@ -260,7 +259,7 @@ function Header() {
         <a href="tel:2047973000" className="hidden rounded-2xl border border-white/10 bg-white/10 px-4 py-3 text-xs font-black uppercase tracking-wide text-white transition hover:bg-white/15 sm:inline-flex">
           Call Dave
         </a>
-        <a href="/login" className="rounded-2xl border border-amber-400/25 bg-amber-400/10 px-4 py-3 text-xs font-black uppercase tracking-wide text-amber-100 transition hover:bg-amber-400/20">
+        <a href="/login" className="rounded-2xl border border-red-500/35 bg-red-500/10 px-4 py-3 text-xs font-black uppercase tracking-wide text-red-50 transition hover:bg-red-500/20">
           Admin
         </a>
       </div>
@@ -271,7 +270,7 @@ function Header() {
 function HeroPanel() {
   return (
     <section className="rounded-[1.75rem] border border-white/10 bg-white/[0.06] p-5 shadow-2xl backdrop-blur sm:p-7 md:p-8">
-      <div className="mb-5 inline-flex rounded-full border border-amber-400/25 bg-amber-400/10 px-4 py-2 text-xs font-black uppercase tracking-[0.2em] text-amber-100">
+      <div className="mb-5 inline-flex rounded-full border border-red-500/35 bg-red-500/10 px-4 py-2 text-xs font-black uppercase tracking-[0.2em] text-red-50">
         Winnipeg Real Estate Help
       </div>
 
@@ -299,7 +298,7 @@ function HeroPanel() {
           <a href="tel:2047973000" className="rounded-2xl border border-emerald-400/30 bg-emerald-400/10 px-4 py-3 text-center text-sm font-black uppercase tracking-wide text-emerald-100">
             Call 204.797.3000
           </a>
-          <a href="mailto:info@davelowery.com" className="rounded-2xl border border-blue-400/30 bg-blue-400/10 px-4 py-3 text-center text-sm font-black uppercase tracking-wide text-blue-100">
+          <a href="mailto:info@davelowery.com" className="rounded-2xl border border-red-500/35 bg-red-500/10 px-4 py-3 text-center text-sm font-black uppercase tracking-wide text-red-50">
             Email Dave
           </a>
         </div>
@@ -328,7 +327,7 @@ function LeadTypeChooser({ onChoose }) {
         <h2 className="mt-2 text-3xl font-black tracking-tight">
           How can Dave help?
         </h2>
-        <p className="mt-2 text-sm leading-relaxed text-slate-600 sm:text-base">
+        <p className="mt-2 text-sm leading-relaxed text-zinc-600 sm:text-base">
           Choose one path. The form will customize itself.
         </p>
       </div>
@@ -339,7 +338,7 @@ function LeadTypeChooser({ onChoose }) {
             key={item.id}
             type="button"
             onClick={() => onChoose(item.id)}
-            className="group min-h-[150px] rounded-3xl border border-slate-200 bg-slate-50 p-4 text-left transition hover:-translate-y-1 hover:border-amber-400 hover:bg-white hover:shadow-xl sm:p-5"
+            className="group min-h-[150px] rounded-3xl border border-zinc-200 bg-zinc-50 p-4 text-left transition hover:-translate-y-1 hover:border-red-500 hover:bg-white hover:shadow-xl sm:p-5"
           >
             <div
               className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl text-white"
@@ -348,7 +347,7 @@ function LeadTypeChooser({ onChoose }) {
               <Icon name={item.icon} />
             </div>
             <h3 className="text-xl font-black">{item.label}</h3>
-            <p className="mt-2 text-sm leading-relaxed text-slate-600">
+            <p className="mt-2 text-sm leading-relaxed text-zinc-600">
               {item.description}
             </p>
             <div
@@ -381,14 +380,14 @@ function LeadTypeChooser({ onChoose }) {
 function LeadForm({ selected, leadType, form, updateField, onBack, onSubmit, submitting, submitError }) {
   return (
     <form onSubmit={onSubmit}>
-      <button type="button" onClick={onBack} className="mb-5 inline-flex items-center gap-2 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-xs font-black uppercase tracking-wide text-slate-600 transition hover:bg-slate-100">
+      <button type="button" onClick={onBack} className="mb-5 inline-flex items-center gap-2 rounded-2xl border border-zinc-200 bg-zinc-50 px-4 py-3 text-xs font-black uppercase tracking-wide text-zinc-600 transition hover:bg-slate-100">
         <Icon name="left" size={16} /> Back to Options
       </button>
 
-      <div className="mb-5 rounded-3xl border border-slate-200 bg-slate-50 p-4">
+      <div className="mb-5 rounded-3xl border border-zinc-200 bg-zinc-50 p-4">
         <p className="text-xs font-black uppercase tracking-[0.2em]" style={{ color: selected.accent }}>{selected.short} Request</p>
         <h2 className="mt-2 text-3xl font-black tracking-tight">Tell Dave a little more.</h2>
-        <p className="mt-2 text-sm text-slate-600">This takes less than one minute.</p>
+        <p className="mt-2 text-sm text-zinc-600">This takes less than one minute.</p>
       </div>
 
       <div className="grid gap-3 sm:grid-cols-2">
@@ -404,17 +403,17 @@ function LeadForm({ selected, leadType, form, updateField, onBack, onSubmit, sub
       {leadType === "market_report" && <MarketReportFields form={form} updateField={updateField} />}
 
       <div className="mt-4">
-        <label className="mb-2 block text-sm font-black text-slate-700">Message / Notes</label>
+        <label className="mb-2 block text-sm font-black text-zinc-700">Message / Notes</label>
         <textarea
           value={form.message}
           onChange={(event) => updateField("message", event.target.value)}
           rows={4}
-          className="w-full min-h-[110px] rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-base outline-none transition focus:border-amber-500 focus:bg-white"
+          className="w-full min-h-[110px] rounded-2xl border border-zinc-200 bg-zinc-50 px-4 py-3 text-base outline-none transition focus:border-red-600 focus:bg-white"
           placeholder="Tell Dave anything helpful about your goals..."
         />
       </div>
 
-      <label className="mt-4 flex items-start gap-3 rounded-2xl bg-slate-50 p-4 text-sm text-slate-600">
+      <label className="mt-4 flex items-start gap-3 rounded-2xl bg-slate-50 p-4 text-sm text-zinc-600">
         <input type="checkbox" checked={form.consent} onChange={(event) => updateField("consent", event.target.checked)} required className="mt-1 h-5 w-5 shrink-0" />
         <span>I consent to Dave Lowery contacting me about my real estate inquiry.</span>
       </label>
@@ -425,7 +424,7 @@ function LeadForm({ selected, leadType, form, updateField, onBack, onSubmit, sub
         {submitting ? "Sending..." : "Send My Request"} <Icon name="right" size={18} />
       </button>
 
-      <p className="mt-4 text-center text-xs font-bold uppercase tracking-wide text-slate-400">Dave will follow up directly.</p>
+      <p className="mt-4 text-center text-xs font-bold uppercase tracking-wide text-zinc-400">Dave will follow up directly.</p>
     </form>
   );
 }
@@ -486,7 +485,7 @@ function SuccessScreen({ resetFlow }) {
 
       <div className="mt-8 grid gap-3 sm:grid-cols-3">
         <a href="tel:2047973000" className="rounded-2xl border border-emerald-400/30 bg-emerald-400/10 px-4 py-4 font-black uppercase tracking-wide text-emerald-100">Call Dave</a>
-        <a href="mailto:info@davelowery.com" className="rounded-2xl border border-blue-400/30 bg-blue-400/10 px-4 py-4 font-black uppercase tracking-wide text-blue-100">Email Dave</a>
+        <a href="mailto:info@davelowery.com" className="rounded-2xl border border-red-500/35 bg-red-500/10 px-4 py-4 font-black uppercase tracking-wide text-red-50">Email Dave</a>
         <button type="button" onClick={resetFlow} className="rounded-2xl border border-white/10 bg-white/10 px-4 py-4 font-black uppercase tracking-wide text-white hover:bg-white/15">Start Over</button>
       </div>
 
@@ -509,10 +508,10 @@ function Section({ children }) {
 function Input({ label, value, onChange, type = "text", required = false, icon }) {
   return (
     <label className="block">
-      <span className="mb-2 block text-sm font-black text-slate-700">{label}{required ? " *" : ""}</span>
+      <span className="mb-2 block text-sm font-black text-zinc-700">{label}{required ? " *" : ""}</span>
       <div className="relative">
-        {icon ? <Icon name={icon} size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" /> : null}
-        <input type={type} value={value} onChange={(event) => onChange(event.target.value)} required={required} className={`w-full min-h-[50px] rounded-2xl border border-slate-200 bg-slate-50 py-3 text-base outline-none transition focus:border-amber-500 focus:bg-white ${icon ? "pl-10 pr-4" : "px-4"}`} />
+        {icon ? <Icon name={icon} size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" /> : null}
+        <input type={type} value={value} onChange={(event) => onChange(event.target.value)} required={required} className={`w-full min-h-[50px] rounded-2xl border border-zinc-200 bg-zinc-50 py-3 text-base outline-none transition focus:border-red-600 focus:bg-white ${icon ? "pl-10 pr-4" : "px-4"}`} />
       </div>
     </label>
   );
@@ -521,8 +520,8 @@ function Input({ label, value, onChange, type = "text", required = false, icon }
 function Select({ label, value, onChange, options }) {
   return (
     <label className="block">
-      <span className="mb-2 block text-sm font-black text-slate-700">{label}</span>
-      <select value={value} onChange={(event) => onChange(event.target.value)} className="w-full min-h-[50px] rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-base outline-none transition focus:border-amber-500 focus:bg-white">
+      <span className="mb-2 block text-sm font-black text-zinc-700">{label}</span>
+      <select value={value} onChange={(event) => onChange(event.target.value)} className="w-full min-h-[50px] rounded-2xl border border-zinc-200 bg-zinc-50 px-4 py-3 text-base outline-none transition focus:border-red-600 focus:bg-white">
         <option value="">Select...</option>
         {options.map((option) => <option key={option} value={option}>{option}</option>)}
       </select>

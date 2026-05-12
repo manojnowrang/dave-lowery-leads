@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 
-const GOLD = "#C8952D";
-const RED = "#D71920";
+const GOLD = "#E31837";
+const RED = "#E31837";
 
 const leadTypeLabels = {
   buy: "Buyer",
@@ -547,7 +547,7 @@ export default function Dashboard() {
 
   if (authChecking) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#030712] text-white">
+      <div className="flex min-h-screen items-center justify-center bg-[#090B10] text-white">
         <div className="rounded-[2rem] border border-white/10 bg-white/[0.06] p-8 text-center shadow-2xl backdrop-blur">
           <p className="text-xs font-black uppercase tracking-[0.24em]" style={{ color: GOLD }}>
             Dave Lowery Admin
@@ -559,18 +559,18 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-[#030712] text-white">
+    <div className="min-h-screen bg-[#090B10] text-white">
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute -top-32 right-0 h-96 w-96 rounded-full bg-amber-500/20 blur-3xl" />
-        <div className="absolute left-[-140px] top-1/3 h-96 w-96 rounded-full bg-blue-900/25 blur-3xl" />
-        <div className="absolute bottom-[-180px] right-1/4 h-96 w-96 rounded-full bg-red-900/20 blur-3xl" />
+        <div className="absolute -top-32 right-0 h-96 w-96 rounded-full bg-red-600/20 blur-3xl" />
+        <div className="absolute left-[-140px] top-1/3 h-96 w-96 rounded-full bg-zinc-700/25 blur-3xl" />
+        <div className="absolute bottom-[-180px] right-1/4 h-96 w-96 rounded-full bg-red-700/18 blur-3xl" />
       </div>
 
       <main className="relative mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
         <Header refresh={async () => Promise.all([fetchLeads(), fetchClients()])} lastUpdated={lastUpdated} signOut={signOut} />
 
         {errorMessage ? (
-          <div className="mt-5 rounded-2xl border border-amber-400/30 bg-amber-500/10 p-4 text-sm font-bold text-amber-100">
+          <div className="mt-5 rounded-2xl border border-red-500/35 bg-red-500/10 p-4 text-sm font-bold text-red-50">
             {errorMessage}
           </div>
         ) : null}
@@ -698,14 +698,14 @@ function TabBar({ activeTab, setActiveTab }) {
     {
       value: "leads",
       label: "Leads",
-      activeClass: "border-green-600/80 bg-green-600 text-black shadow-xl shadow-[#C8A44D]/20",
-      inactiveClass: "border-green-600/40 bg-green-600/12 text-[#F6E6B5] hover:bg-green-600/20 hover:text-white",
+      activeClass: "border-[#E31837]/90 bg-[#E31837] text-white shadow-xl shadow-[#E31837]/20",
+      inactiveClass: "border-[#E31837]/45 bg-[#E31837]/10 text-red-50 hover:bg-[#E31837]/20 hover:text-white",
     },
     {
       value: "clients",
       label: "Clients / Mailing List",
-      activeClass: "border-blue-300/80 bg-blue-600 text-white shadow-xl shadow-blue-600/20",
-      inactiveClass: "border-blue-400/40 bg-blue-500/10 text-blue-100 hover:bg-blue-500/20 hover:text-white",
+      activeClass: "border-[#E31837]/90 bg-[#E31837] text-white shadow-xl shadow-[#E31837]/20",
+      inactiveClass: "border-[#E31837]/45 bg-[#E31837]/10 text-red-50 hover:bg-[#E31837]/20 hover:text-white",
     },
     {
       value: "archived",
@@ -939,7 +939,7 @@ function SearchBox({ value, onChange, placeholder }) {
       value={value}
       onChange={(event) => onChange(event.target.value)}
       placeholder={placeholder}
-      className="min-h-[44px] rounded-2xl border border-white/10 bg-black/30 px-4 text-sm font-semibold text-white outline-none placeholder:text-white/35 focus:border-amber-400"
+      className="min-h-[44px] rounded-2xl border border-white/10 bg-black/30 px-4 text-sm font-semibold text-white outline-none placeholder:text-white/35 focus:border-red-500"
     />
   );
 }
@@ -949,7 +949,7 @@ function FilterSelect({ value, onChange, options }) {
     <select
       value={value}
       onChange={(event) => onChange(event.target.value)}
-      className="min-h-[44px] rounded-2xl border border-white/10 bg-black/30 px-4 text-sm font-semibold text-white outline-none focus:border-amber-400"
+      className="min-h-[44px] rounded-2xl border border-white/10 bg-black/30 px-4 text-sm font-semibold text-white outline-none focus:border-red-500"
     >
       {options.map(([optionValue, optionLabel]) => (
         <option key={optionValue} value={optionValue}>{optionLabel}</option>
@@ -1009,18 +1009,18 @@ function LeadRowCard({ lead, openLead, advanceLeadStage, updatePriority, archive
         <p className="text-white/45">{lead.timeline || "No timeline"}</p>
       </div>
 
-      <select value={lead.priority || "warm"} onChange={(event) => updatePriority(lead.id, event.target.value)} className="rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-xs font-black uppercase tracking-wide text-white outline-none focus:border-amber-400">
+      <select value={lead.priority || "warm"} onChange={(event) => updatePriority(lead.id, event.target.value)} className="rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-xs font-black uppercase tracking-wide text-white outline-none focus:border-red-500">
         <option value="hot">Hot</option>
         <option value="warm">Warm</option>
         <option value="cold">Cold</option>
       </select>
 
       <div className="flex flex-wrap gap-2 lg:justify-end">
-        <button type="button" onClick={openLead} className="rounded-xl border border-blue-400/30 bg-blue-400/10 px-3 py-2 text-xs font-black uppercase tracking-wide text-blue-100 transition hover:bg-blue-400/20">Edit</button>
+        <button type="button" onClick={openLead} className="rounded-xl border border-red-500/35 bg-red-500/10 px-3 py-2 text-xs font-black uppercase tracking-wide text-red-50 transition hover:bg-red-500/20">Edit</button>
         <button type="button" onClick={() => advanceLeadStage(lead)} disabled={["closed", "archived"].includes(lead.status || "new")} className="rounded-xl border border-emerald-400/30 bg-emerald-400/10 px-3 py-2 text-xs font-black uppercase tracking-wide text-emerald-200 transition hover:bg-emerald-400/20 disabled:cursor-not-allowed disabled:opacity-50">
           {(lead.status || "new") === "closed" ? "✓ Closed" : `Move: ${stageLabels[getNextStage(lead.status || "new")]}`}
         </button>
-        <button type="button" onClick={() => archiveLead(lead.id)} className="rounded-xl border border-amber-400/30 bg-amber-400/10 px-3 py-2 text-xs font-black uppercase tracking-wide text-amber-100 transition hover:bg-amber-400/20">Archive</button>
+        <button type="button" onClick={() => archiveLead(lead.id)} className="rounded-xl border border-red-500/35 bg-red-500/10 px-3 py-2 text-xs font-black uppercase tracking-wide text-red-50 transition hover:bg-red-500/20">Archive</button>
       </div>
     </div>
   );
@@ -1042,9 +1042,9 @@ function ClientRowCard({ client, openClient, archiveClient, convertClientToLead 
       <ContactBlock phone={client.cell_number || client.home_phone || client.office_phone} email={client.email} />
 
       <div className="flex flex-wrap gap-2 lg:justify-end">
-        <button type="button" onClick={openClient} className="rounded-xl border border-blue-400/30 bg-blue-400/10 px-3 py-2 text-xs font-black uppercase tracking-wide text-blue-100 transition hover:bg-blue-400/20">Edit</button>
+        <button type="button" onClick={openClient} className="rounded-xl border border-red-500/35 bg-red-500/10 px-3 py-2 text-xs font-black uppercase tracking-wide text-red-50 transition hover:bg-red-500/20">Edit</button>
         <button type="button" onClick={() => convertClientToLead(client)} disabled={client.converted_to_lead} className="rounded-xl border border-emerald-400/30 bg-emerald-400/10 px-3 py-2 text-xs font-black uppercase tracking-wide text-emerald-200 transition hover:bg-emerald-400/20 disabled:cursor-not-allowed disabled:opacity-50">Convert</button>
-        <button type="button" onClick={() => archiveClient(client.id)} className="rounded-xl border border-amber-400/30 bg-amber-400/10 px-3 py-2 text-xs font-black uppercase tracking-wide text-amber-100 transition hover:bg-amber-400/20">Archive</button>
+        <button type="button" onClick={() => archiveClient(client.id)} className="rounded-xl border border-red-500/35 bg-red-500/10 px-3 py-2 text-xs font-black uppercase tracking-wide text-red-50 transition hover:bg-red-500/20">Archive</button>
       </div>
     </div>
   );
@@ -1056,7 +1056,7 @@ function ArchivedLeadRow({ lead, openLead, restore }) {
       <p className="font-black text-white">{lead.first_name || "Unknown"} {lead.last_name || ""}</p>
       <p className="mt-1 text-sm text-white/45">{lead.email || "No email"} {lead.phone ? `• ${lead.phone}` : ""}</p>
       <div className="mt-3 flex gap-2">
-        <button type="button" onClick={openLead} className="rounded-xl border border-blue-400/30 bg-blue-400/10 px-3 py-2 text-xs font-black uppercase text-blue-100">View</button>
+        <button type="button" onClick={openLead} className="rounded-xl border border-red-500/35 bg-red-500/10 px-3 py-2 text-xs font-black uppercase text-red-50">View</button>
         <button type="button" onClick={restore} className="rounded-xl border border-green-400/30 bg-green-400/10 px-3 py-2 text-xs font-black uppercase text-green-100">Restore</button>
       </div>
     </div>
@@ -1069,7 +1069,7 @@ function ArchivedClientRow({ client, openClient, restore }) {
       <p className="font-black text-white">{client.name_first || "Unknown"} {client.name_last || ""}</p>
       <p className="mt-1 text-sm text-white/45">{client.email || "No email"} {client.cell_number ? `• ${client.cell_number}` : ""}</p>
       <div className="mt-3 flex gap-2">
-        <button type="button" onClick={openClient} className="rounded-xl border border-blue-400/30 bg-blue-400/10 px-3 py-2 text-xs font-black uppercase text-blue-100">View</button>
+        <button type="button" onClick={openClient} className="rounded-xl border border-red-500/35 bg-red-500/10 px-3 py-2 text-xs font-black uppercase text-red-50">View</button>
         <button type="button" onClick={restore} className="rounded-xl border border-green-400/30 bg-green-400/10 px-3 py-2 text-xs font-black uppercase text-green-100">Restore</button>
       </div>
     </div>
@@ -1080,8 +1080,8 @@ function ContactBlock({ phone, email }) {
   return (
     <div className="text-sm">
       {phone ? <a className="block font-bold text-white/90 hover:text-emerald-200" href={`tel:${cleanPhone(phone)}`}>{phone}</a> : <span className="font-bold text-white/50">No phone</span>}
-      {email ? <a className="block text-white/45 hover:text-blue-200" href={`mailto:${email}`}>{email}</a> : <span className="block text-white/35">No email</span>}
-      {phone ? <a className="mt-1 block text-xs font-black uppercase tracking-wide text-amber-200" href={`sms:${cleanPhone(phone)}`}>Text</a> : null}
+      {email ? <a className="block text-white/45 hover:text-red-100" href={`mailto:${email}`}>{email}</a> : <span className="block text-white/35">No email</span>}
+      {phone ? <a className="mt-1 block text-xs font-black uppercase tracking-wide text-red-100" href={`sms:${cleanPhone(phone)}`}>Text</a> : null}
     </div>
   );
 }
@@ -1091,7 +1091,7 @@ function LeadBadge({ type }) {
     buy: "border-emerald-400/30 bg-emerald-400/10 text-emerald-200",
     sell: "border-red-400/30 bg-red-400/10 text-red-200",
     invest: "border-purple-400/30 bg-purple-400/10 text-purple-200",
-    market_report: "border-blue-400/30 bg-blue-400/10 text-blue-200",
+    market_report: "border-red-500/35 bg-red-500/10 text-red-100",
   };
 
   return <span className={`inline-flex rounded-full border px-3 py-1 text-xs font-black uppercase tracking-wide ${styles[type] || "border-white/20 bg-white/10 text-white/70"}`}>{leadTypeLabels[type] || type || "Unknown"}</span>;
@@ -1100,7 +1100,7 @@ function LeadBadge({ type }) {
 function PriorityPill({ priority }) {
   const styles = {
     hot: "border-red-400/40 bg-red-500/15 text-red-200",
-    warm: "border-amber-400/40 bg-amber-500/15 text-amber-200",
+    warm: "border-amber-400/40 bg-amber-500/15 text-red-100",
     cold: "border-slate-400/30 bg-slate-500/10 text-slate-200",
   };
 
@@ -1109,9 +1109,9 @@ function PriorityPill({ priority }) {
 
 function StatusPill({ status }) {
   const styles = {
-    new: "border-amber-400/30 bg-amber-400/10 text-amber-200",
+    new: "border-red-500/35 bg-red-500/10 text-red-100",
     contacted: "border-emerald-400/30 bg-emerald-400/10 text-emerald-200",
-    showing: "border-blue-400/30 bg-blue-400/10 text-blue-200",
+    showing: "border-red-500/35 bg-red-500/10 text-red-100",
     offer: "border-purple-400/30 bg-purple-400/10 text-purple-200",
     closed: "border-white/30 bg-white/15 text-white",
     archived: "border-slate-400/30 bg-slate-500/10 text-slate-200",
@@ -1121,7 +1121,7 @@ function StatusPill({ status }) {
 }
 
 function ClientStatusPill({ status }) {
-  return <span className="inline-flex rounded-full border border-amber-400/30 bg-amber-400/10 px-3 py-1 text-xs font-black uppercase tracking-wide text-amber-200">{status || "Not Contacted"}</span>;
+  return <span className="inline-flex rounded-full border border-red-500/35 bg-red-500/10 px-3 py-1 text-xs font-black uppercase tracking-wide text-red-100">{status || "Not Contacted"}</span>;
 }
 
 function LeadDrawer({ lead, close, updateLead, archiveLead, unarchiveLead, moveLeadBackToClients }) {
@@ -1163,7 +1163,7 @@ function LeadDrawer({ lead, close, updateLead, archiveLead, unarchiveLead, moveL
 
   return (
     <div className="fixed inset-0 z-50 flex justify-end bg-black/60 backdrop-blur-sm">
-      <aside className="h-full w-full max-w-2xl overflow-y-auto border-l border-white/10 bg-[#06101f] p-5 text-white shadow-2xl sm:p-7">
+      <aside className="h-full w-full max-w-2xl overflow-y-auto border-l border-white/10 bg-[#151922] p-5 text-white shadow-2xl sm:p-7">
         <DrawerBackButton close={close} />
         <DrawerTitle eyebrow="Editable Lead Profile" title={`${editing.first_name || "Unknown"} ${editing.last_name || ""}`}>
           <LeadBadge type={editing.lead_type} />
@@ -1205,9 +1205,9 @@ function LeadDrawer({ lead, close, updateLead, archiveLead, unarchiveLead, moveL
           {(lead.status || "new") === "archived" ? (
             <button type="button" onClick={() => unarchiveLead(lead.id)} className="rounded-2xl border border-green-400/30 bg-green-500/10 px-5 py-4 text-sm font-black uppercase tracking-wide text-green-100 hover:bg-green-500/20">Restore Lead</button>
           ) : (
-            <button type="button" onClick={() => archiveLead(lead.id)} className="rounded-2xl border border-amber-400/30 bg-amber-500/10 px-5 py-4 text-sm font-black uppercase tracking-wide text-amber-100 hover:bg-amber-500/20">Archive Lead</button>
+            <button type="button" onClick={() => archiveLead(lead.id)} className="rounded-2xl border border-red-500/35 bg-red-500/10 px-5 py-4 text-sm font-black uppercase tracking-wide text-red-50 hover:bg-red-600/20">Archive Lead</button>
           )}
-          <button type="button" onClick={() => moveLeadBackToClients(lead)} className="rounded-2xl border border-blue-400/30 bg-blue-500/10 px-5 py-4 text-sm font-black uppercase tracking-wide text-blue-100 hover:bg-blue-500/20">Move to Clients</button>
+          <button type="button" onClick={() => moveLeadBackToClients(lead)} className="rounded-2xl border border-blue-400/30 bg-red-500/10 px-5 py-4 text-sm font-black uppercase tracking-wide text-red-50 hover:bg-red-500/20">Move to Clients</button>
         </div>
 
         <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.05] p-4">
@@ -1249,7 +1249,7 @@ function ClientDrawer({ client, close, updateClient, archiveClient, restoreClien
 
   return (
     <div className="fixed inset-0 z-50 flex justify-end bg-black/60 backdrop-blur-sm">
-      <aside className="h-full w-full max-w-2xl overflow-y-auto border-l border-white/10 bg-[#06101f] p-5 text-white shadow-2xl sm:p-7">
+      <aside className="h-full w-full max-w-2xl overflow-y-auto border-l border-white/10 bg-[#151922] p-5 text-white shadow-2xl sm:p-7">
         <DrawerBackButton close={close} />
         <DrawerTitle eyebrow="Editable Client Profile" title={`${editing.name_first || "Unknown"} ${editing.name_last || ""}`}>
           <ClientStatusPill status={editing.status} />
@@ -1278,7 +1278,7 @@ function ClientDrawer({ client, close, updateClient, archiveClient, restoreClien
           {client.archived ? (
             <button type="button" onClick={() => restoreClient(client.id)} className="rounded-2xl border border-green-400/30 bg-green-500/10 px-5 py-4 text-sm font-black uppercase tracking-wide text-green-100 hover:bg-green-500/20">Restore Client</button>
           ) : (
-            <button type="button" onClick={() => archiveClient(client.id)} className="rounded-2xl border border-amber-400/30 bg-amber-500/10 px-5 py-4 text-sm font-black uppercase tracking-wide text-amber-100 hover:bg-amber-500/20">Archive Client</button>
+            <button type="button" onClick={() => archiveClient(client.id)} className="rounded-2xl border border-red-500/35 bg-red-500/10 px-5 py-4 text-sm font-black uppercase tracking-wide text-red-50 hover:bg-red-600/20">Archive Client</button>
           )}
           <button type="button" onClick={() => convertClientToLead(client)} disabled={client.converted_to_lead} className="rounded-2xl border border-emerald-400/30 bg-emerald-500/10 px-5 py-4 text-sm font-black uppercase tracking-wide text-emerald-100 hover:bg-emerald-500/20 disabled:cursor-not-allowed disabled:opacity-50">Convert to Lead</button>
         </div>
@@ -1316,8 +1316,8 @@ function ActionLinks({ phone, email }) {
   return (
     <div className="mt-6 grid gap-3 sm:grid-cols-3">
       <a href={phone ? `tel:${cleanPhone(phone)}` : undefined} className="rounded-2xl border border-emerald-400/30 bg-emerald-400/10 px-4 py-3 text-center font-black text-emerald-200">Call</a>
-      <a href={phone ? `sms:${cleanPhone(phone)}` : undefined} className="rounded-2xl border border-amber-400/30 bg-amber-400/10 px-4 py-3 text-center font-black text-amber-200">Text</a>
-      <a href={email ? `mailto:${email}` : undefined} className="rounded-2xl border border-blue-400/30 bg-blue-400/10 px-4 py-3 text-center font-black text-blue-200">Email</a>
+      <a href={phone ? `sms:${cleanPhone(phone)}` : undefined} className="rounded-2xl border border-red-500/35 bg-red-500/10 px-4 py-3 text-center font-black text-red-100">Text</a>
+      <a href={email ? `mailto:${email}` : undefined} className="rounded-2xl border border-red-500/35 bg-red-500/10 px-4 py-3 text-center font-black text-red-100">Email</a>
     </div>
   );
 }
@@ -1326,7 +1326,7 @@ function EditField({ label, value, onChange }) {
   return (
     <label className="block rounded-2xl border border-white/10 bg-white/[0.05] p-4">
       <span className="text-xs font-black uppercase tracking-[0.18em] text-white/35">{label}</span>
-      <input value={value || ""} onChange={(event) => onChange(event.target.value)} className="mt-2 w-full rounded-xl border border-white/10 bg-black/30 px-3 py-3 font-bold text-white outline-none focus:border-amber-400" />
+      <input value={value || ""} onChange={(event) => onChange(event.target.value)} className="mt-2 w-full rounded-xl border border-white/10 bg-black/30 px-3 py-3 font-bold text-white outline-none focus:border-red-500" />
     </label>
   );
 }
@@ -1335,7 +1335,7 @@ function EditSelect({ label, value, onChange, options }) {
   return (
     <label className="block rounded-2xl border border-white/10 bg-white/[0.05] p-4">
       <span className="text-xs font-black uppercase tracking-[0.18em] text-white/35">{label}</span>
-      <select value={value || ""} onChange={(event) => onChange(event.target.value)} className="mt-2 w-full rounded-xl border border-white/10 bg-black/30 px-3 py-3 font-bold text-white outline-none focus:border-amber-400">
+      <select value={value || ""} onChange={(event) => onChange(event.target.value)} className="mt-2 w-full rounded-xl border border-white/10 bg-black/30 px-3 py-3 font-bold text-white outline-none focus:border-red-500">
         {options.map(([optionValue, optionLabel]) => <option key={optionValue} value={optionValue}>{optionLabel}</option>)}
       </select>
     </label>
@@ -1346,7 +1346,7 @@ function EditTextArea({ label, value, onChange, placeholder = "" }) {
   return (
     <label className="block rounded-2xl border border-white/10 bg-white/[0.05] p-4">
       <span className="text-xs font-black uppercase tracking-[0.18em] text-white/35">{label}</span>
-      <textarea value={value || ""} onChange={(event) => onChange(event.target.value)} placeholder={placeholder} rows={5} className="mt-2 w-full rounded-xl border border-white/10 bg-black/30 px-3 py-3 font-bold text-white outline-none placeholder:text-white/25 focus:border-amber-400" />
+      <textarea value={value || ""} onChange={(event) => onChange(event.target.value)} placeholder={placeholder} rows={5} className="mt-2 w-full rounded-xl border border-white/10 bg-black/30 px-3 py-3 font-bold text-white outline-none placeholder:text-white/25 focus:border-red-500" />
     </label>
   );
 }
