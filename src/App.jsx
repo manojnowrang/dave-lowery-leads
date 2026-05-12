@@ -1,3 +1,4 @@
+// Dashboard compacting note: visual row height updates are handled in App.css overrides.
 import React, { useMemo, useState } from "react";
 
 const GOLD = "#C8952D";

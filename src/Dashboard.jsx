@@ -991,10 +991,10 @@ function StatCard({ label, value, accent, onClick, active = false }) {
 
 function LeadRowCard({ lead, openLead, advanceLeadStage, updatePriority, archiveLead }) {
   return (
-    <div className="grid gap-4 rounded-2xl border border-white/10 bg-black/20 p-4 transition hover:bg-white/[0.04] lg:grid-cols-[1.3fr_1fr_1fr_0.8fr_0.8fr_1fr] lg:items-center">
+    <div className="grid gap-2 rounded-xl border border-white/10 bg-black/20 px-3 py-2 transition hover:bg-white/[0.04] lg:grid-cols-[1.4fr_0.9fr_0.9fr_0.8fr_0.7fr_0.9fr] lg:items-center min-h-[72px]">
       <button type="button" onClick={openLead} className="text-left">
-        <p className="font-black text-white">{lead.first_name || "Unknown"} {lead.last_name || ""}</p>
-        <p className="mt-1 line-clamp-1 text-sm text-white/45">{lead.message || lead.notes || "Click to view/edit lead"}</p>
+        <p className="font-black text-[15px] text-white">{lead.first_name || "Unknown"} {lead.last_name || ""}</p>
+        <p className="mt-0.5 line-clamp-1 text-[11px] text-white/45">{lead.message || lead.notes || "Click to view/edit lead"}</p>
       </button>
 
       <div className="flex flex-wrap gap-2">
@@ -1016,11 +1016,11 @@ function LeadRowCard({ lead, openLead, advanceLeadStage, updatePriority, archive
       </select>
 
       <div className="flex flex-wrap gap-2 lg:justify-end">
-        <button type="button" onClick={openLead} className="rounded-xl border border-blue-400/30 bg-blue-400/10 px-3 py-2 text-xs font-black uppercase tracking-wide text-blue-100 transition hover:bg-blue-400/20">Edit</button>
-        <button type="button" onClick={() => advanceLeadStage(lead)} disabled={["closed", "archived"].includes(lead.status || "new")} className="rounded-xl border border-emerald-400/30 bg-emerald-400/10 px-3 py-2 text-xs font-black uppercase tracking-wide text-emerald-200 transition hover:bg-emerald-400/20 disabled:cursor-not-allowed disabled:opacity-50">
+        <button type="button" onClick={openLead} className="rounded-lg border border-blue-400/30 bg-blue-400/10 px-2 py-1 text-[10px] font-black uppercase tracking-wide text-blue-100 transition hover:bg-blue-400/20">Edit</button>
+        <button type="button" onClick={() => advanceLeadStage(lead)} disabled={["closed", "archived"].includes(lead.status || "new")} className="rounded-lg border border-emerald-400/30 bg-emerald-400/10 px-2 py-1 text-[10px] font-black uppercase tracking-wide text-emerald-200 transition hover:bg-emerald-400/20 disabled:cursor-not-allowed disabled:opacity-50">
           {(lead.status || "new") === "closed" ? "✓ Closed" : `Move: ${stageLabels[getNextStage(lead.status || "new")]}`}
         </button>
-        <button type="button" onClick={() => archiveLead(lead.id)} className="rounded-xl border border-amber-400/30 bg-amber-400/10 px-3 py-2 text-xs font-black uppercase tracking-wide text-amber-100 transition hover:bg-amber-400/20">Archive</button>
+        <button type="button" onClick={() => archiveLead(lead.id)} className="rounded-lg border border-amber-400/30 bg-amber-400/10 px-2 py-1 text-[10px] font-black uppercase tracking-wide text-amber-100 transition hover:bg-amber-400/20">Archive</button>
       </div>
     </div>
   );
@@ -1028,23 +1028,23 @@ function LeadRowCard({ lead, openLead, advanceLeadStage, updatePriority, archive
 
 function ClientRowCard({ client, openClient, archiveClient, convertClientToLead }) {
   return (
-    <div className="grid gap-4 rounded-2xl border border-white/10 bg-black/20 p-4 transition hover:bg-white/[0.04] lg:grid-cols-[1.3fr_1fr_1fr_1fr] lg:items-center">
+    <div className="grid gap-2 rounded-xl border border-white/10 bg-black/20 px-3 py-2 transition hover:bg-white/[0.04] lg:grid-cols-[1.5fr_0.9fr_0.9fr_0.8fr] lg:items-center min-h-[72px]">
       <button type="button" onClick={openClient} className="text-left">
-        <p className="font-black text-white">{client.name_first || "Unknown"} {client.name_last || ""}</p>
-        <p className="mt-1 text-sm text-white/45">{client.notes || "Click to view/edit client"}</p>
+        <p className="font-black text-[15px] text-white">{client.name_first || "Unknown"} {client.name_last || ""}</p>
+        <p className="mt-0.5 text-[11px] text-white/45">{client.notes || "Click to view/edit client"}</p>
       </button>
 
       <div className="flex flex-wrap gap-2">
         <ClientStatusPill status={client.status} />
-        {client.converted_to_lead ? <span className="rounded-full border border-purple-400/30 bg-purple-400/10 px-3 py-1 text-xs font-black uppercase tracking-wide text-purple-200">Converted</span> : null}
+        {client.converted_to_lead ? <span className="rounded-full border border-purple-400/30 bg-purple-400/10 px-2 py-0.5 text-[10px] font-black uppercase tracking-wide text-purple-200">Converted</span> : null}
       </div>
 
       <ContactBlock phone={client.cell_number || client.home_phone || client.office_phone} email={client.email} />
 
       <div className="flex flex-wrap gap-2 lg:justify-end">
-        <button type="button" onClick={openClient} className="rounded-xl border border-blue-400/30 bg-blue-400/10 px-3 py-2 text-xs font-black uppercase tracking-wide text-blue-100 transition hover:bg-blue-400/20">Edit</button>
-        <button type="button" onClick={() => convertClientToLead(client)} disabled={client.converted_to_lead} className="rounded-xl border border-emerald-400/30 bg-emerald-400/10 px-3 py-2 text-xs font-black uppercase tracking-wide text-emerald-200 transition hover:bg-emerald-400/20 disabled:cursor-not-allowed disabled:opacity-50">Convert</button>
-        <button type="button" onClick={() => archiveClient(client.id)} className="rounded-xl border border-amber-400/30 bg-amber-400/10 px-3 py-2 text-xs font-black uppercase tracking-wide text-amber-100 transition hover:bg-amber-400/20">Archive</button>
+        <button type="button" onClick={openClient} className="rounded-lg border border-blue-400/30 bg-blue-400/10 px-2 py-1 text-[10px] font-black uppercase tracking-wide text-blue-100 transition hover:bg-blue-400/20">Edit</button>
+        <button type="button" onClick={() => convertClientToLead(client)} disabled={client.converted_to_lead} className="rounded-lg border border-emerald-400/30 bg-emerald-400/10 px-2 py-1 text-[10px] font-black uppercase tracking-wide text-emerald-200 transition hover:bg-emerald-400/20 disabled:cursor-not-allowed disabled:opacity-50">Convert</button>
+        <button type="button" onClick={() => archiveClient(client.id)} className="rounded-lg border border-amber-400/30 bg-amber-400/10 px-2 py-1 text-[10px] font-black uppercase tracking-wide text-amber-100 transition hover:bg-amber-400/20">Archive</button>
       </div>
     </div>
   );
@@ -1053,10 +1053,10 @@ function ClientRowCard({ client, openClient, archiveClient, convertClientToLead 
 function ArchivedLeadRow({ lead, openLead, restore }) {
   return (
     <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
-      <p className="font-black text-white">{lead.first_name || "Unknown"} {lead.last_name || ""}</p>
-      <p className="mt-1 text-sm text-white/45">{lead.email || "No email"} {lead.phone ? `• ${lead.phone}` : ""}</p>
+      <p className="font-black text-[15px] text-white">{lead.first_name || "Unknown"} {lead.last_name || ""}</p>
+      <p className="mt-0.5 text-[11px] text-white/45">{lead.email || "No email"} {lead.phone ? `• ${lead.phone}` : ""}</p>
       <div className="mt-3 flex gap-2">
-        <button type="button" onClick={openLead} className="rounded-xl border border-blue-400/30 bg-blue-400/10 px-3 py-2 text-xs font-black uppercase text-blue-100">View</button>
+        <button type="button" onClick={openLead} className="rounded-lg border border-blue-400/30 bg-blue-400/10 px-2 py-1 text-[10px] font-black uppercase text-blue-100">View</button>
         <button type="button" onClick={restore} className="rounded-xl border border-green-400/30 bg-green-400/10 px-3 py-2 text-xs font-black uppercase text-green-100">Restore</button>
       </div>
     </div>
@@ -1066,10 +1066,10 @@ function ArchivedLeadRow({ lead, openLead, restore }) {
 function ArchivedClientRow({ client, openClient, restore }) {
   return (
     <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
-      <p className="font-black text-white">{client.name_first || "Unknown"} {client.name_last || ""}</p>
-      <p className="mt-1 text-sm text-white/45">{client.email || "No email"} {client.cell_number ? `• ${client.cell_number}` : ""}</p>
+      <p className="font-black text-[15px] text-white">{client.name_first || "Unknown"} {client.name_last || ""}</p>
+      <p className="mt-0.5 text-[11px] text-white/45">{client.email || "No email"} {client.cell_number ? `• ${client.cell_number}` : ""}</p>
       <div className="mt-3 flex gap-2">
-        <button type="button" onClick={openClient} className="rounded-xl border border-blue-400/30 bg-blue-400/10 px-3 py-2 text-xs font-black uppercase text-blue-100">View</button>
+        <button type="button" onClick={openClient} className="rounded-lg border border-blue-400/30 bg-blue-400/10 px-2 py-1 text-[10px] font-black uppercase text-blue-100">View</button>
         <button type="button" onClick={restore} className="rounded-xl border border-green-400/30 bg-green-400/10 px-3 py-2 text-xs font-black uppercase text-green-100">Restore</button>
       </div>
     </div>
@@ -1253,7 +1253,7 @@ function ClientDrawer({ client, close, updateClient, archiveClient, restoreClien
         <DrawerBackButton close={close} />
         <DrawerTitle eyebrow="Editable Client Profile" title={`${editing.name_first || "Unknown"} ${editing.name_last || ""}`}>
           <ClientStatusPill status={editing.status} />
-          {editing.converted_to_lead ? <span className="rounded-full border border-purple-400/30 bg-purple-400/10 px-3 py-1 text-xs font-black uppercase tracking-wide text-purple-200">Converted</span> : null}
+          {editing.converted_to_lead ? <span className="rounded-full border border-purple-400/30 bg-purple-400/10 px-2 py-0.5 text-[10px] font-black uppercase tracking-wide text-purple-200">Converted</span> : null}
         </DrawerTitle>
 
         <ActionLinks phone={mainPhone} email={editing.email} />

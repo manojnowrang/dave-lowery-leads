@@ -183,3 +183,323 @@
   }
 }
 
+/* =======================================================
+   FORCE COMPACT ADMIN DASHBOARD ROWS
+   Covers Dave Lowery admin dashboard record cards even when
+   the JSX uses Tailwind utility classes instead of custom names.
+======================================================= */
+
+/* tighten the database/list panel */
+[class*="Database"],
+[class*="Command"],
+.client-database,
+.lead-command-centre,
+.pipeline-section {
+  padding: 16px 18px !important;
+}
+
+/* compact the inner list wrapper */
+.client-list,
+.lead-list,
+.pipeline-list,
+.clients-list,
+.leads-list,
+[class*="client-list"],
+[class*="lead-list"],
+[class*="pipeline-list"] {
+  gap: 8px !important;
+}
+
+/* exact custom class support */
+.pipeline-record,
+.client-record,
+.lead-record,
+.record-card,
+.client-card,
+.lead-card,
+.pipeline-card,
+.client-list-card,
+.lead-list-card {
+  display: grid !important;
+  grid-template-columns: minmax(190px, 1.55fr) minmax(120px, 0.85fr) minmax(160px, 1.2fr) minmax(120px, 0.8fr) auto !important;
+  align-items: center !important;
+  gap: 12px !important;
+  min-height: 64px !important;
+  padding: 8px 14px !important;
+  margin-bottom: 8px !important;
+  border-radius: 16px !important;
+}
+
+/* Tailwind fallback: targets the large rounded record cards inside the list panel */
+main section div.rounded-\[1\.75rem\] div.rounded-\[1\.25rem\],
+main section div.rounded-\[1\.75rem\] div.rounded-2xl,
+main .rounded-\[1\.75rem\] .rounded-2xl {
+  min-height: 64px !important;
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+}
+
+/* text tightening */
+.pipeline-record h3,
+.client-record h3,
+.lead-record h3,
+.record-card h3,
+.client-card h3,
+.lead-card h3,
+.pipeline-record p,
+.client-record p,
+.lead-record p,
+.record-card p,
+.client-card p,
+.lead-card p {
+  margin-top: 0 !important;
+  margin-bottom: 2px !important;
+  line-height: 1.12 !important;
+}
+
+.pipeline-record h3,
+.client-record h3,
+.lead-record h3,
+.record-card h3,
+.client-card h3,
+.lead-card h3 {
+  font-size: 16px !important;
+}
+
+.pipeline-record p,
+.client-record p,
+.lead-record p,
+.record-card p,
+.client-card p,
+.lead-card p,
+.pipeline-record span,
+.client-record span,
+.lead-record span,
+.record-card span,
+.client-card span,
+.lead-card span {
+  font-size: 12px !important;
+  line-height: 1.12 !important;
+}
+
+/* badge tightening */
+.badge,
+.status-badge,
+.type-badge,
+.pipeline-record span,
+.client-record span,
+.lead-record span {
+  line-height: 1 !important;
+}
+
+.badge,
+.status-badge,
+.type-badge {
+  font-size: 10px !important;
+  padding: 4px 9px !important;
+  min-height: 20px !important;
+  border-radius: 999px !important;
+}
+
+/* button stack tightening */
+.pipeline-actions,
+.client-actions,
+.lead-actions,
+.record-actions {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-end !important;
+  gap: 5px !important;
+}
+
+.pipeline-record button,
+.client-record button,
+.lead-record button,
+.record-card button,
+.client-card button,
+.lead-card button,
+.action-btn,
+.edit-btn,
+.archive-btn,
+.move-btn,
+.convert-btn {
+  min-height: 26px !important;
+  padding: 6px 10px !important;
+  font-size: 11px !important;
+  line-height: 1 !important;
+  border-radius: 10px !important;
+}
+
+@media (max-width: 900px) {
+  .pipeline-record,
+  .client-record,
+  .lead-record,
+  .record-card,
+  .client-card,
+  .lead-card,
+  .pipeline-card,
+  .client-list-card,
+  .lead-list-card {
+    grid-template-columns: 1fr !important;
+    align-items: stretch !important;
+  }
+
+  .pipeline-actions,
+  .client-actions,
+  .lead-actions,
+  .record-actions {
+    flex-direction: row !important;
+    justify-content: flex-start !important;
+    align-items: center !important;
+  }
+}
+
+
+/* =======================================================
+   THINNER TOP DASHBOARD ROWS: Tabs + Count/KPI Cards
+   Added for the Dave Lowery Admin dashboard screenshot.
+======================================================= */
+
+/* View tabs: Leads / Clients / Archived */
+.dashboard-tabs,
+.view-tabs,
+.admin-tabs,
+.tab-row,
+.segmented-tabs,
+[class*="tabs"],
+[class*="Tabs"] {
+  gap: 10px !important;
+  margin-bottom: 14px !important;
+}
+
+.dashboard-tabs button,
+.view-tabs button,
+.admin-tabs button,
+.tab-row button,
+.segmented-tabs button,
+.tab-button,
+.view-tab,
+.segment-button,
+[role="tab"] {
+  min-height: 42px !important;
+  height: 42px !important;
+  padding: 8px 16px !important;
+  border-radius: 14px !important;
+  font-size: 13px !important;
+  line-height: 1 !important;
+}
+
+/* KPI/count cards: Clients, Not Contacted, Contacted, Converted, Leads, etc. */
+.stat-card,
+.stats-card,
+.metric-card,
+.kpi-card,
+.summary-card,
+.count-card,
+.dashboard-card,
+.client-stat-card,
+.lead-stat-card,
+.report-card {
+  min-height: 92px !important;
+  padding: 16px 20px !important;
+  border-radius: 20px !important;
+}
+
+.stat-card h2,
+.stats-card h2,
+.metric-card h2,
+.kpi-card h2,
+.summary-card h2,
+.count-card h2,
+.dashboard-card h2,
+.client-stat-card h2,
+.lead-stat-card h2,
+.report-card h2,
+.stat-card .number,
+.stats-card .number,
+.metric-card .number,
+.kpi-card .number,
+.summary-card .number,
+.count-card .number,
+.dashboard-card .number {
+  font-size: 34px !important;
+  line-height: 0.95 !important;
+  margin: 0 0 6px 0 !important;
+}
+
+.stat-card h3,
+.stats-card h3,
+.metric-card h3,
+.kpi-card h3,
+.summary-card h3,
+.count-card h3,
+.dashboard-card h3,
+.client-stat-card h3,
+.lead-stat-card h3,
+.report-card h3,
+.stat-card p,
+.stats-card p,
+.metric-card p,
+.kpi-card p,
+.summary-card p,
+.count-card p,
+.dashboard-card p {
+  margin: 0 !important;
+  line-height: 1.05 !important;
+}
+
+.stat-card .accent-line,
+.stats-card .accent-line,
+.metric-card .accent-line,
+.kpi-card .accent-line,
+.summary-card .accent-line,
+.count-card .accent-line,
+.dashboard-card .accent-line,
+.client-stat-card .accent-line,
+.lead-stat-card .accent-line,
+.report-card .accent-line {
+  width: 48px !important;
+  height: 5px !important;
+  margin-bottom: 10px !important;
+  border-radius: 999px !important;
+}
+
+/* Tailwind fallback for the stat cards shown in the screenshot. */
+main button:has(.text-4xl),
+main button:has(.text-5xl),
+main div:has(> .text-4xl),
+main div:has(> .text-5xl) {
+  min-height: 92px !important;
+  padding: 16px 20px !important;
+  border-radius: 20px !important;
+}
+
+main .text-4xl,
+main .text-5xl {
+  font-size: 34px !important;
+  line-height: 0.95 !important;
+}
+
+main .tracking-\[\.22em\],
+main .tracking-\[0\.22em\],
+main .tracking-widest {
+  line-height: 1.05 !important;
+}
+
+/* Reduce the vertical gap between tab row, stat row, and database panel. */
+.dashboard-main,
+.admin-main,
+main {
+  gap: 14px !important;
+}
+
+.stats-grid,
+.metric-grid,
+.kpi-grid,
+.summary-grid,
+[class*="stats-grid"],
+[class*="metric-grid"],
+[class*="kpi-grid"] {
+  gap: 14px !important;
+  margin-bottom: 14px !important;
+}
